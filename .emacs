@@ -38,3 +38,6 @@
      '(haskell-mode-hook '(turn-on-haskell-indentation)))
     (custom-set-variables
      '(haskell-mode-hook '(turn-on-haskell-indentation)))
+
+(add-to-list 'load-path  "~/.emacs.d/idris-mode/")
+(require 'idris-mode)
