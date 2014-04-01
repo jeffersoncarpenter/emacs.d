@@ -11,6 +11,12 @@
 ; disable the obnoxious bell
 (setq ring-bell-function 'ignore)
 
+(add-hook 'text-mode-hook
+          '(lambda ()
+             (setq indent-tabs-mode nil)
+             (setq tab-width 4)
+             (setq indent-line-function (quote insert-tab))))
+
 
 ; base environment additions
 
@@ -84,7 +90,7 @@
 ; major modes
 
 ; csharp mode
-(load "csharp-mode.el")
+(load "~/.emacs.d/csharp-mode.el")
 (flymake-mode)
 ;(add-hook 'csharp-mode-hook
 ;	  '(setq-default c-basic-offset 4))
@@ -240,3 +246,16 @@ Returns relative path of required thing under point"
 
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
+
+
+(defun smart-beginning-of-line ()
+  "Move point to first non-whitespace character or beginning-of-line.
+Move point to the first non-whitespace character on this line.
+If point was already at that position, move point to beginning of line."
+  (interactive)
+  (let ((oldpos (point)))
+    (beginning-of-line)
+    (and (= oldpos (point))
+         (back-to-indentation))))
+(global-set-key [home] 'smart-beginning-of-line)
+(global-set-key "\C-a" 'smart-beginning-of-line)
