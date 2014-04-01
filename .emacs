@@ -257,5 +257,8 @@ If point was already at that position, move point to beginning of line."
     (beginning-of-line)
     (and (= oldpos (point))
          (back-to-indentation))))
+
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
+
+(setq tab-width 4)
