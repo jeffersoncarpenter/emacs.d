@@ -262,7 +262,7 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (let ((oldpos (point)))
     (beginning-of-line)
-    (and (= oldpos (point))
+    (if (= oldpos (point))
          (back-to-indentation))))
 
 (global-set-key [home] 'smart-beginning-of-line)
