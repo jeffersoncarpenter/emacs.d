@@ -14,9 +14,11 @@
 (add-hook 'text-mode-hook
           '(lambda ()
              (setq indent-tabs-mode nil)
-             (setq tab-width 4)
+			 (setq tab-width 4)
              (setq indent-line-function (quote insert-tab))))
 
+(setq tab-width 4)
+(setq-default tab-width 4)
 
 ; base environment additions
 
@@ -72,8 +74,13 @@
 ; enable package manager
 (require 'package)
 (add-to-list 'package-archives
-	          '("marmalade" . "http://marmalade-repo.org/packages/"))
+             '("melpa" . "http://melpa.milkbox.net/packages/")
+			 '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
+
+
+; enable magit
+(require 'magit)
 
 
 ; run bashrc.cmd if it exists
@@ -256,13 +263,27 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (let ((oldpos (point)))
     (beginning-of-line)
-    (and (= oldpos (point))
+    (if (= oldpos (point))
          (back-to-indentation))))
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
 
 (setq tab-width 4)
+
+
+(defun list-buffers-same-window (&optional arg)
+  "Display a list of existing buffers.
+The list is displayed in a buffer named \"*Buffer List*\".
+See `buffer-menu' for a description of the Buffer Menu.
+
+By default, all buffers are listed except those whose names start
+with a space (which are for internal use).  With prefix argument
+ARG, show only buffers that are visiting files."
+  (interactive "P")
+  (switch-to-buffer (list-buffers-noselect arg)))
+
+(global-set-key (kbd "C-x C-b") 'list-buffers-same-window)
 
 
 (defun sudo-edit (&optional arg)
