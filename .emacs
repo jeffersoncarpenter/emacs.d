@@ -43,6 +43,7 @@
     (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment)
+(global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
 
 
 ; back-window
@@ -262,3 +263,16 @@ If point was already at that position, move point to beginning of line."
 (global-set-key "\C-a" 'smart-beginning-of-line)
 
 (setq tab-width 4)
+
+
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
