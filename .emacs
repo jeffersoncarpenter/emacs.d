@@ -80,7 +80,7 @@
 
 
 ; enable magit
-(require 'magit)
+; (require 'magit)
 
 
 ; run bashrc.cmd if it exists
