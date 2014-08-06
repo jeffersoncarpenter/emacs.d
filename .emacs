@@ -26,6 +26,7 @@
 ; additional keys for executing extended command
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 (global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-xm" 'execute-extended-command)
 
 
 ; additional keys for scrolling a little
@@ -80,7 +81,7 @@
 
 
 ; enable magit
-; (require 'magit)
+(require 'magit)
 
 
 ; run bashrc.cmd if it exists
@@ -108,6 +109,9 @@
             (define-key csharp-mode-map (kbd "{") nil)
             (define-key csharp-mode-map (kbd "}") nil)
             (define-key csharp-mode-map (kbd ",") nil)))
+
+
+(load "~/.emacs.d/csharp-mode/csharp-mode.el")
 
 
 
