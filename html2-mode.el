@@ -1,5 +1,5 @@
 (define-derived-mode html2-mode html-mode
-  (defun indentation-level ()
+  (defun html-indentation-level ()
     "returns the number of tabs to do"
 	(setq indentation-level-counter -1) ; first element will set this to 0
 	(setq indentation-level-unindent-next-line nil)
@@ -20,9 +20,29 @@
 		  (next-line))
 		indentation-level-counter)))
 
-  (defun indent-line ()
+  (defun html-indent-line ()
 	"indents current line"
+	(interactive)
 	(save-excursion
 	  (back-to-indentation)
 	  (delete-region (line-beginning-position) (point))
-	  (insert (make-string (indentation-level) ?\t)))))
+	  (insert (make-string (indentation-level) ?\t))))
+
+
+  (defun html-indent-region ()
+	"indents current region"
+	(interactive)
+	(save-excursion
+	  (dolist (i (number-sequence (region-beginning) (region-end)))
+		(goto-line i)
+		(html-indent-line))))
+
+  (defun html-indent-line-or-region ()
+	"indents line or region"
+	(interactive)
+	(if (use-region-p)
+		(html-indent-region)
+	  (html-indent-line)))
+
+  (local-set-key (kbd "TAB") 'html-indent-line-or-region))
+
