@@ -114,9 +114,6 @@
             (define-key csharp-mode-map (kbd ",") nil)))
 
 
-(load "~/.emacs.d/csharp-mode/csharp-mode.el")
-
-
 
 
 (require 'org-install)
