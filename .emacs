@@ -101,6 +101,9 @@
 ; html2-mode
 (load "~/.emacs.d/html2-mode.el")
 
+; web-mode
+(load "~/.emacs.d/web-mode.el")
+
 ; csharp mode
 (load "~/.emacs.d/csharp-mode.el")
 (flymake-mode)
