@@ -11,6 +11,9 @@
 ; disable the obnoxious bell
 (setq ring-bell-function 'ignore)
 
+; don't silently add a newline at the ends of files
+(setq require-final-newline nil)
+
 (add-hook 'text-mode-hook
           '(lambda ()
              (setq indent-tabs-mode nil)
@@ -69,7 +72,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (wombat))))
+ '(custom-enabled-themes (quote (wombat)))
+ '(haskell-mode-hook '(turn-on-haskell-indentation))
+ '(inhibit-startup-screen t))
 
 
 ; enable package manager
@@ -130,8 +135,6 @@
 
 
 (put 'upcase-region 'disabled nil)
-(custom-set-variables
- '(haskell-mode-hook '(turn-on-haskell-indentation)))
 
 
 (add-to-list 'load-path  "~/.emacs.d/idris-mode/")
