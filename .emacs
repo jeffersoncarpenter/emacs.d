@@ -108,6 +108,7 @@
 
 ; web-mode
 (load "~/.emacs.d/web-mode.el")
+(setq web-mode-enable-auto-quoting nil)
 
 ; csharp mode
 (load "~/.emacs.d/csharp-mode.el")
