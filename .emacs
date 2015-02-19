@@ -110,8 +110,8 @@
 (load "~/.emacs.d/web-mode.el")
 
 ; csharp mode
-(load "~/.emacs.d/csharp-mode.el")
-(flymake-mode)
+;; (load "~/.emacs.d/csharp-mode.el")
+;; (flymake-mode)
 ;(add-hook 'csharp-mode-hook
 ;	  '(setq-default c-basic-offset 4))
 (add-hook 'csharp-mode-hook
@@ -307,3 +307,8 @@ buffer is not visiting a file."
       (find-file (concat "/sudo:root@localhost:"
                          (ido-read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+
+(setq-default c-basic-offset 4
+			  tab-width 4
+			  indent-tabs-mode t)
