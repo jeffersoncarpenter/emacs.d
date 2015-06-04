@@ -110,6 +110,7 @@
 (load "~/.emacs.d/web-mode.el")
 (setq web-mode-enable-auto-quoting nil)
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
 ; csharp mode
 ;; (load "~/.emacs.d/csharp-mode.el")
@@ -281,6 +282,8 @@ If point was already at that position, move point to beginning of line."
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
 
+
+; note to self: what the fuck is this for?  C mode?
 (setq tab-width 4)
 
 
