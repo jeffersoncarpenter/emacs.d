@@ -112,16 +112,16 @@
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 
 ; csharp mode
-(load "~/.emacs.d/csharp-mode.el")
-(flymake-mode)
+;; (load "~/.emacs.d/csharp-mode.el")
+;; (flymake-mode)
 ;(add-hook 'csharp-mode-hook
 ;	  '(setq-default c-basic-offset 4))
-(add-hook 'csharp-mode-hook
-	  (lambda ()
-            (c-set-style "c#")
-            (define-key csharp-mode-map (kbd "{") nil)
-            (define-key csharp-mode-map (kbd "}") nil)
-            (define-key csharp-mode-map (kbd ",") nil)))
+;; (add-hook 'csharp-mode-hook
+;; 	  (lambda ()
+;;             (c-set-style "c#")
+;;             (define-key csharp-mode-map (kbd "{") nil)
+;;             (define-key csharp-mode-map (kbd "}") nil)
+;;             (define-key csharp-mode-map (kbd ",") nil)))
 
 
 
