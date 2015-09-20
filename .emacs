@@ -23,7 +23,14 @@
 (setq tab-width 4)
 (setq-default tab-width 4)
 
-; base environment additions
+
+;; use good title format
+(setq-default frame-title-format "%b (%f)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; base environment additions ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ; additional keys for executing extended command
@@ -101,22 +108,25 @@
 (setq shell-mode-hook 'setup-shell)
 
 
-; major modes
+;; major modes
 
-; html2-mode
+;; html2-mode
 (load "~/.emacs.d/html2-mode.el")
 
-; web-mode
+;; web-mode
 (load "~/.emacs.d/web-mode.el")
 (setq web-mode-enable-auto-quoting nil)
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
-; csharp mode
-;; (load "~/.emacs.d/csharp-mode.el")
-;; (flymake-mode)
-;(add-hook 'csharp-mode-hook
-;	  '(setq-default c-basic-offset 4))
+;; tern-mode
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
+;; csharp mode
 (add-hook 'csharp-mode-hook
 	  (lambda ()
             (c-set-style "c#")
@@ -319,3 +329,4 @@ buffer is not visiting a file."
 			  indent-tabs-mode t)
 
 (defalias 'rs 'replace-string)
+(defalias 'rb 'revert-buffer)
