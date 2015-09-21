@@ -47,6 +47,9 @@
 ; show column
 (setq column-number-mode t)
 
+; electric pair mode is cool
+(electric-pair-mode)
+
 
 ; Crtl-; comments/uncomments current region, or current line if no region
 (defun comment-or-uncomment ()
@@ -73,12 +76,12 @@
 (global-set-key (kbd "C-<return>") 'insert-newline-before-line)
 
 
-; set theme
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu t)
  '(custom-enabled-themes (quote (wombat)))
  '(haskell-mode-hook '(turn-on-haskell-indentation))
  '(inhibit-startup-screen t))
@@ -120,7 +123,9 @@
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
 ;; tern-mode
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js-mode-hook (lambda ()
+						  (tern-mode t)
+						  (auto-complete-mode t)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
