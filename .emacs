@@ -241,19 +241,19 @@ Returns relative path of required thing under point"
              (end-of-paths (- (search-forward "]") 1))
              (paths-string (buffer-substring beginning-of-paths end-of-paths))
              (paths-with-shit (split-string paths-string ","))
-             (paths (mapcar (lambda (str) (replace-regexp-in-string "['\n ]" "" str)) paths-with-shit))
+             (paths (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit))
 
              ;; get args
              (beginning-of-args (search-forward "("))
              (end-of-args (- (search-forward ")") 1))
              (args-string (buffer-substring beginning-of-args end-of-args))
              (args-with-shit (split-string args-string ","))
-             (args (mapcar (lambda (str) (replace-regexp-in-string "['\n ]" "" str)) args-with-shit))
+             (args (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit))
              
              ;; find path of word
              (index (index-of word args)))
         (if index
-            (nth index paths)
+			(nth index paths)
           (message "Unable to find file"))))))
 
 (defun parent-directory (dir)
