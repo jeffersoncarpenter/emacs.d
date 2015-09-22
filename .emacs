@@ -1,17 +1,17 @@
-; base environment changes
+;; base environment changes
 
-; take out gui
+;; take out gui
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-; truncate lines
+;; truncate lines
 (set-default 'truncate-lines t)
 
-; disable the obnoxious bell
+;; disable the obnoxious bell
 (setq ring-bell-function 'ignore)
 
-; don't silently add a newline at the ends of files
+;; don't silently add a newline at the ends of files
 (setq require-final-newline nil)
 
 (add-hook 'text-mode-hook
@@ -33,25 +33,24 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-; additional keys for executing extended command
+;; additional keys for executing extended command
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-xm" 'eval-expression)
 
 
-; additional keys for scrolling a little
+;; additional keys for scrolling a little
 (global-set-key "\M-P" (lambda () (interactive) (scroll-down 1)))
 (global-set-key "\M-N" (lambda () (interactive) (scroll-up 1)))
 
 
-; show column
+;; enable some modes
 (setq column-number-mode t)
-
-; electric pair mode is cool
 (electric-pair-mode)
+(global-auto-complete-mode t)
 
 
-; Crtl-; comments/uncomments current region, or current line if no region
+;; Crtl-; comments/uncomments current region, or current line if no region
 (defun comment-or-uncomment ()
   (interactive)
   (if (use-region-p)
@@ -62,12 +61,12 @@
 (global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
 
 
-; back-window
+;; back-window
 (defun back-window () (interactive) (other-window -1))
 (global-set-key (kbd "C-x O") 'back-window)
 
 
-; Ctrl-Enter works like in Visual Studio
+;; Ctrl-Enter works like in Visual Studio
 (defun insert-newline-before-line ()
   (interactive)
   (progn
@@ -87,7 +86,7 @@
  '(inhibit-startup-screen t))
 
 
-; enable package manager
+;; enable package manager
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/")
@@ -95,8 +94,13 @@
 (package-initialize)
 
 
-; enable magit
+;; enable magit
 (require 'magit)
+
+;; enable flymake for js
+
+(load "~/.emacs.d/flymake-cursor.el")
+(require 'flymake-jslint)
 
 
 ; run bashrc.cmd if it exists
@@ -125,7 +129,7 @@
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
 						  (tern-mode t)
-						  (auto-complete-mode t)))
+						  (flymake-jslint-load)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
@@ -148,7 +152,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+  '(flymake-errline ((((class color)) (:underline (:color "DarkRed" :style wave))))))
 
 
 
@@ -162,7 +166,7 @@
 
 
 
-; C# and JavaScript shit
+;; C# and JavaScript shit
 
 
 (defun find-namespace (word)
@@ -172,8 +176,8 @@
       (beginning-of-buffer)
       (search-forward "namespace")
       (forward-char) ; go past space
-      (buffer-substring (point) (line-end-position))
-      )))
+      (buffer-substring (point) (line-end-position)))))
+
   
 (defun add-using (symbol)
   "Adds a using directive to the top of the file"
@@ -183,8 +187,7 @@
       (if (not (search-forward using (point-max) t))
           (progn
             (beginning-of-buffer)
-            (insert using "\n")
-            )))))
+            (insert using "\n"))))))
 
 (defun add-using-for-word-at-point ()
   "Adds using for word at point"
@@ -192,27 +195,6 @@
   (add-using (word-at-point)))
 
 (global-set-key (kbd "C-. u") 'add-using-for-word-at-point)
-
-
-(defun fix-lp-file ()
-  "Edits references in .linq file to move Solomo.Common projects to the correct place"
-  (interactive)
-  (save-excursion
-    (beginning-of-buffer)
-    (let ((project-prefix "Solomo.Common")
-          (old-ref-string "<Reference Relative=\"..\\Solomo.Common")
-          (new-ref-string "<Reference Relative=\"..\\Common\\Solomo.Common"))
-      (while (search-forward old-ref-string nil t)
-
-        ; replace reference
-        (delete-backward-char (length old-ref-string))
-        (insert new-ref-string)
-
-        ; replace metadata
-        (search-forward ">") ; get past reference relative
-        (search-forward project-prefix)
-        (backward-char (length project-prefix))
-        (insert "Common\\")))))
 
 
 (defun requirejs-jump-to-require ()
@@ -233,32 +215,72 @@
             (index-of el (cdr list) (+ n 1)))))))
 
 
+(defun requirejs-dependencies ()
+  "Return list of requirejs dependencies brought in to current
+	require or define statement."
+  (interactive)
+  (save-excursion
+	(requirejs-jump-to-require)
+	(search-forward "(")
+	(let* ((beginning-of-args (search-forward "("))
+		   (end-of-args (- (search-forward ")") 1))
+		   (args-string (buffer-substring beginning-of-args end-of-args))
+		   (args-with-shit (split-string args-string ",")))
+	  (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit))))
+
+
+(defun requirejs-paths ()
+  "Return list of paths brought in to current require or define
+  statement."
+  (interactive)
+  (save-excursion
+	(requirejs-jump-to-require)
+	(let* ((beginning-of-paths (search-forward "["))
+		   (end-of-paths (- (search-forward "]") 1))
+		   (paths-string (buffer-substring beginning-of-paths end-of-paths))
+		   (paths-with-shit (split-string paths-string ",")))
+	  (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit))))
+
+
+(defun requirejs-add-dependency ()
+  "Add a dependency.  Assume we are inside a RequireJS require or
+  define statement."
+  (interactive)
+  (let ((word (word-at-point)))
+	(save-excursion
+	  (requirejs-jump-to-require)
+	  (let ((dependencies (requirejs-dependencies))
+			(paths (requirejs-paths)))
+		(if (not (index-of word dependencies))
+			(let ((index (index-of word (sort (cons word dependencies) 'string<))))
+			  (requirejs-jump-to-require)
+			  ;; add to array
+			  (search-forward "([")
+			  (dotimes (i index) (search-forward ","))
+			  (insert "\n'" word "',")
+			  (indent-for-tab-command)
+			  ;; add to function arguments
+			  (if (equal (char-after (point)) "]")
+				  (insert "\n"))
+			  (search-forward "(")
+			  (dotimes (i index) (re-search-forward "[,)]"))
+			  (if (not (string= (string (char-before (point))) "("))
+				  (progn
+					(backward-char)
+					(insert ", " word))
+				(insert word ", ")))
+		  (message "dependency already exists"))))))
+
 (defun requirejs-find-relative-path ()
-  "Assumes we are inside a RequireJS require or define statement.
-Returns relative path of required thing under point"
+  "Return relative path of dependency under point.  Assume we are
+inside a RequireJS require or define statement."
   (interactive)
   (let ((word (word-at-point)))
     (save-excursion
       (requirejs-jump-to-require)
-      (let* (
-             ;; get paths
-             (beginning-of-paths (search-forward "["))
-             (end-of-paths (- (search-forward "]") 1))
-             (paths-string (buffer-substring beginning-of-paths end-of-paths))
-             (paths-with-shit (split-string paths-string ","))
-             (paths (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit))
-
-             ;; get args
-             (beginning-of-args (search-forward "("))
-             (end-of-args (- (search-forward ")") 1))
-             (args-string (buffer-substring beginning-of-args end-of-args))
-             (args-with-shit (split-string args-string ","))
-             (args (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit))
-             
-             ;; find path of word
-             (index (index-of word args)))
+      (let ((index (index-of word (requirejs-dependencies))))
         (if index
-			(nth index paths)
+			(nth index (requirejs-paths))
           (message "Unable to find file"))))))
 
 (defun parent-directory (dir)
@@ -282,6 +304,7 @@ Returns relative path of required thing under point"
 
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
+(global-set-key (kbd "C-, u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
