@@ -2,5 +2,7 @@ auto-save-list/
 elpa/
 
 .#session*
+\#session*
+ac-comphist.dat
 session*
 tramp

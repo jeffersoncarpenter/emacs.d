@@ -98,6 +98,7 @@
 
 ;; enable flymake for js
 
+(require 'flymake)
 (load "~/.emacs.d/flymake-cursor.el")
 (load "~/.emacs.d/flymake-node-jshint.el")
 
@@ -127,7 +128,8 @@
 
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
-						  (tern-mode t)))
+						  (tern-mode t)
+						  (flymake-find-file-hook)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
