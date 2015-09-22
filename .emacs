@@ -102,6 +102,9 @@
 (load "~/.emacs.d/flymake-cursor.el")
 (load "~/.emacs.d/flymake-node-jshint.el")
 
+(global-set-key (kbd "C-c C-x C-n") 'flymake-goto-next-error)
+(global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
+
 
 ; run bashrc.cmd if it exists
 (defun setup-shell ()
