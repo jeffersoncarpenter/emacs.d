@@ -47,7 +47,6 @@
 ;; enable some modes
 (setq column-number-mode t)
 (electric-pair-mode)
-(global-auto-complete-mode t)
 
 
 ;; Crtl-; comments/uncomments current region, or current line if no region
@@ -100,7 +99,7 @@
 ;; enable flymake for js
 
 (load "~/.emacs.d/flymake-cursor.el")
-(require 'flymake-jslint)
+(load "~/.emacs.d/flymake-node-jshint.el")
 
 
 ; run bashrc.cmd if it exists
@@ -128,8 +127,7 @@
 
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
-						  (tern-mode t)
-						  (flymake-jslint-load)))
+						  (tern-mode t)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
@@ -226,7 +224,7 @@
 		   (end-of-args (- (search-forward ")") 1))
 		   (args-string (buffer-substring beginning-of-args end-of-args))
 		   (args-with-shit (split-string args-string ",")))
-	  (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit))))
+	  (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit)))))
 
 
 (defun requirejs-paths ()
@@ -239,7 +237,7 @@
 		   (end-of-paths (- (search-forward "]") 1))
 		   (paths-string (buffer-substring beginning-of-paths end-of-paths))
 		   (paths-with-shit (split-string paths-string ",")))
-	  (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit))))
+	  (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit)))))
 
 
 (defun requirejs-add-dependency ()
@@ -259,6 +257,8 @@
 			  (dotimes (i index) (search-forward ","))
 			  (insert "\n'" word "',")
 			  (indent-for-tab-command)
+			  (if (string= "]" (string (char-after (point))))
+				  (insert "\n"))
 			  ;; add to function arguments
 			  (if (equal (char-after (point)) "]")
 				  (insert "\n"))
@@ -268,7 +268,9 @@
 				  (progn
 					(backward-char)
 					(insert ", " word))
-				(insert word ", ")))
+				(insert word)
+				(if (not (string= (string (char-after (point))) ")"))
+					(insert ", "))))
 		  (message "dependency already exists"))))))
 
 (defun requirejs-find-relative-path ()
@@ -358,3 +360,6 @@ buffer is not visiting a file."
 
 (defalias 'rs 'replace-string)
 (defalias 'rb 'revert-buffer)
+
+
+(global-auto-complete-mode t)
