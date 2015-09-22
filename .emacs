@@ -301,7 +301,6 @@ inside a RequireJS require or define statement."
   (let* ((root (if root root (file-name-directory (buffer-file-name))))
          (rel-path (requirejs-find-relative-path))
          (full-path (concat root rel-path ".js")))
-    (message full-path)
     (if (file-exists-p full-path)
         (find-file full-path)
       (let ((parent (parent-directory root)))
