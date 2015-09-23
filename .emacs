@@ -104,6 +104,7 @@
 
 (global-set-key (kbd "C-c C-x C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
+(global-set-key (kbd "C-c C-x C-c") 'flymake-start-syntax-check)
 
 
 ; run bashrc.cmd if it exists
