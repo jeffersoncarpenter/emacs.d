@@ -92,6 +92,8 @@
 			 '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
+;; browse kill ring
+(load "~/.emacs.d/browse-kill-ring.el")
 
 ;; enable magit
 (require 'magit)
