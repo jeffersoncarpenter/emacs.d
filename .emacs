@@ -95,6 +95,8 @@
 			 '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
+;; browse kill ring
+(load "~/.emacs.d/browse-kill-ring.el")
 
 ;; enable magit
 (require 'magit)
@@ -311,7 +313,6 @@ inside a RequireJS require or define statement."
             (requirejs-go-to-definition parent))))))
 
 
-(global-unset-key (kbd "C-@"))
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-@ d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
