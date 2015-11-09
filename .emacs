@@ -79,6 +79,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(kill-do-not-save-duplicates t)
+ '(save-interprogram-paste-before-kill t)
+ '(delete-active-region nil)
  '(ac-auto-show-menu t)
  '(custom-enabled-themes (quote (wombat)))
  '(haskell-mode-hook '(turn-on-haskell-indentation))
@@ -105,7 +108,6 @@
 (global-set-key (kbd "C-c C-x C-n") 'flymake-goto-next-error)
 (global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c C-x C-c") 'flymake-start-syntax-check)
-
 
 ; run bashrc.cmd if it exists
 (defun setup-shell ()
@@ -259,7 +261,8 @@
 			(let ((index (index-of word (sort (cons word dependencies) 'string<))))
 			  (requirejs-jump-to-require)
 			  ;; add to array
-			  (search-forward "([")
+			  (search-forward "([
+'")
 			  (dotimes (i index) (search-forward ","))
 			  (insert "\n'" word "',")
 			  (indent-for-tab-command)
@@ -295,7 +298,6 @@ inside a RequireJS require or define statement."
   (unless (equal "c:/" dir)
     (file-name-directory (directory-file-name dir))))
 
-
 (defun requirejs-go-to-definition (&optional root)
   "Opens file corresponding to required thing under point"
   (interactive)
@@ -309,9 +311,13 @@ inside a RequireJS require or define statement."
             (requirejs-go-to-definition parent))))))
 
 
+(global-unset-key (kbd "C-@"))
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
+(global-set-key (kbd "C-@ d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
+(global-set-key (kbd "C-@ t") (lambda () (interactive) (requirejs-go-to-definition)))
 (global-set-key (kbd "C-, u") 'requirejs-add-dependency)
+(global-set-key (kbd "C-@ u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
@@ -326,6 +332,20 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
+
+
+(defun forward-delete-word (arg)
+  "Delete characters forward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (backward-word arg) (point))))
+(global-set-key (kbd "<C-backspace>") 'backward-delete-word)
+(global-set-key "\M-d" 'forward-delete-word)
 
 
 ; note to self: what the fuck is this for?  C mode?
