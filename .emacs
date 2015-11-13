@@ -263,8 +263,7 @@
 			(let ((index (index-of word (sort (cons word dependencies) 'string<))))
 			  (requirejs-jump-to-require)
 			  ;; add to array
-			  (search-forward "([
-'")
+			  (search-forward "([")
 			  (dotimes (i index) (search-forward ","))
 			  (insert "\n'" word "',")
 			  (indent-for-tab-command)
@@ -314,11 +313,8 @@ inside a RequireJS require or define statement."
 
 
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
-(global-set-key (kbd "C-@ d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
-(global-set-key (kbd "C-@ t") (lambda () (interactive) (requirejs-go-to-definition)))
 (global-set-key (kbd "C-, u") 'requirejs-add-dependency)
-(global-set-key (kbd "C-@ u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
