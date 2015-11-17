@@ -84,7 +84,6 @@
  '(delete-active-region nil)
  '(ac-auto-show-menu t)
  '(custom-enabled-themes (quote (wombat)))
- '(haskell-mode-hook '(turn-on-haskell-indentation))
  '(inhibit-startup-screen t))
 
 
@@ -133,6 +132,10 @@
 (setq web-mode-enable-auto-quoting nil)
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
+;; haskell indent mode
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
 
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
