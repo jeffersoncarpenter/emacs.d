@@ -39,6 +39,13 @@
 (global-set-key "\C-xm" 'eval-expression)
 
 
+;; change window size
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
+
 ;; additional keys for scrolling a little
 (global-set-key "\M-P" (lambda () (interactive) (scroll-down 1)))
 (global-set-key "\M-N" (lambda () (interactive) (scroll-up 1)))
