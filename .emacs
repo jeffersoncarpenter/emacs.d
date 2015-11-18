@@ -86,9 +86,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(kill-do-not-save-duplicates t)
+ '(save-interprogram-paste-before-kill t)
+ '(delete-active-region nil)
  '(ac-auto-show-menu t)
  '(custom-enabled-themes (quote (wombat)))
- '(haskell-mode-hook '(turn-on-haskell-indentation))
  '(inhibit-startup-screen t))
 
 
@@ -115,7 +117,6 @@
 (global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c C-x C-c") 'flymake-start-syntax-check)
 
-
 ; run bashrc.cmd if it exists
 (defun setup-shell ()
   "runs C:\bashrc.cmd"
@@ -138,6 +139,10 @@
 (setq web-mode-enable-auto-quoting nil)
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
+;; haskell indent mode
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
 
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
@@ -304,7 +309,6 @@ inside a RequireJS require or define statement."
   (unless (equal "c:/" dir)
     (file-name-directory (directory-file-name dir))))
 
-
 (defun requirejs-go-to-definition (&optional root)
   "Opens file corresponding to required thing under point"
   (interactive)
@@ -335,6 +339,20 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
+
+
+(defun forward-delete-word (arg)
+  "Delete characters forward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (backward-word arg) (point))))
+(global-set-key (kbd "<C-backspace>") 'backward-delete-word)
+(global-set-key "\M-d" 'forward-delete-word)
 
 
 ; note to self: what the fuck is this for?  C mode?
