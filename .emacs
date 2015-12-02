@@ -14,16 +14,6 @@
 ;; don't silently add a newline at the ends of files
 (setq require-final-newline nil)
 
-(add-hook 'text-mode-hook
-          '(lambda ()
-             (setq indent-tabs-mode nil)
-			 (setq tab-width 4)
-             (setq indent-line-function (quote insert-tab))))
-
-(setq tab-width 4)
-(setq-default tab-width 4)
-
-
 ;; use good title format
 (setq-default frame-title-format "%b (%f)")
 
@@ -129,6 +119,7 @@
 (setq shell-mode-hook 'setup-shell)
 
 
+
 ;; major modes
 
 ;; html2-mode
@@ -140,6 +131,10 @@
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
+
+
+;; minor modes
+
 ;; haskell indent mode
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
@@ -147,7 +142,8 @@
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
 						  (tern-mode t)
-						  (flymake-find-file-hook)))
+						  (flymake-find-file-hook)
+						  (linum-mode)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
@@ -163,6 +159,7 @@
 
 
 
+;; flymake color
 
 (require 'org-install)
 (custom-set-faces
