@@ -396,6 +396,6 @@ buffer is not visiting a file."
 (defun hs-indent ()
   "Indent stuff in haskell"
   (interactive)
-  (align-regexp (region-beginning) (region-end) ":"))
+  (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):"))
 
 (global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
