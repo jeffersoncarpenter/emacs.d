@@ -142,8 +142,7 @@
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
 						  (tern-mode t)
-						  (flymake-find-file-hook)
-						  (linum-mode)))
+						  (flymake-find-file-hook)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
@@ -392,3 +391,11 @@ buffer is not visiting a file."
 
 
 (global-auto-complete-mode t)
+
+
+(defun hs-indent ()
+  "Indent stuff in haskell"
+  (interactive)
+  (align-regexp (region-beginning) (region-end) ":"))
+
+(global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
