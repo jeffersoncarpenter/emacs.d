@@ -417,6 +417,6 @@ buffer is not visiting a file."
   (align-regexp
    (line-beginning (region-beginning))
    (line-end (region-end))
-   "\\(\\s-*\\)\\( :\\)?\\(->\\)?[a-zA-Z[:space:]]*$"))
+   "\\(\\s-*\\)\\( :\\|->\\)[a-zA-Z[:space:]():]*$"))
 
 (global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
