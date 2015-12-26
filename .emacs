@@ -136,7 +136,7 @@
 ;; minor modes
 
 ;; haskell indent mode
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
 
 ;; tern-mode
@@ -177,7 +177,25 @@
 (require 'idris-mode)
 
 
+(add-to-list 'load-path  "~/.emacs.d/structured-haskell-mode/elisp")
+(require 'shm)
+(setq shm-program-name "~/.emacs.d/structured-haskell-mode/dist/build/structured-haskell-mode/structured-haskell-mode")
 
+
+;; good stuff
+(defun line-beginning (n)
+  "Takes a buffer position n.  Returns the character position of
+  the first character of that line."
+  (save-excursion
+	(goto-char n)
+	(line-beginning-position)))
+
+(defun line-end (n)
+  "Takes a buffer position n.  Returns the character position of
+  the last character of that line."
+  (save-excursion
+	(goto-char n)
+	(line-end-position)))
 
 
 ;; C# and JavaScript shit
@@ -396,6 +414,9 @@ buffer is not visiting a file."
 (defun hs-indent ()
   "Indent stuff in haskell"
   (interactive)
-  (align-regexp (region-beginning) (region-end) "\\(\\s-*\\):"))
+  (align-regexp
+   (line-beginning (region-beginning))
+   (line-end (region-end))
+   "\\(\\s-*\\)\\( :\\)?\\(->\\)?[a-zA-Z[:space:]]*$"))
 
 (global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
