@@ -131,6 +131,10 @@
 (add-to-list 'auto-mode-alist '("\\.hjs\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
+;; php mode (eewwww)
+(load "~/.emacs.d/php-mode.el")
+
+
 
 
 ;; minor modes
@@ -417,6 +421,6 @@ buffer is not visiting a file."
   (align-regexp
    (line-beginning (region-beginning))
    (line-end (region-end))
-   "\\(\\s-*\\)\\( :\\|->\\)[a-zA-Z[:space:]():]*$"))
+   "\\(\\s-*\\)\\( :\\|->\\).*$"))
 
 (global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
