@@ -19,7 +19,7 @@
 
 ;; show trailing whitespace, please
 (setq-default show-trailing-whitespace t)
-  
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; base environment additions ;;
@@ -217,7 +217,7 @@
       (forward-char) ; go past space
       (buffer-substring (point) (line-end-position)))))
 
-  
+
 (defun add-using (symbol)
   "Adds a using directive to the top of the file"
   (let ((using (concat "using " (find-namespace symbol) ";")))
