@@ -17,6 +17,9 @@
 ;; use good title format
 (setq-default frame-title-format "%b (%f)")
 
+;; show trailing whitespace, please
+(setq-default show-trailing-whitespace t)
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; base environment additions ;;
@@ -177,8 +180,8 @@
 (put 'upcase-region 'disabled nil)
 
 
-(add-to-list 'load-path  "~/.emacs.d/idris-mode/")
 (require 'idris-mode)
+(define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
 (add-to-list 'load-path  "~/.emacs.d/structured-haskell-mode/elisp")
@@ -423,4 +426,4 @@ buffer is not visiting a file."
    (line-end (region-end))
    "\\(\\s-*\\)\\( :\\|->\\).*$"))
 
-(global-set-key (kbd "C-c C-SPC TAB") 'hs-indent)
+(global-set-key (kbd "C-c C-SPC C-TAB") 'hs-indent)
