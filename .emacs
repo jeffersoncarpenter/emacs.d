@@ -48,6 +48,7 @@
 (setq column-number-mode t)
 (electric-pair-mode)
 
+(load "~/.emacs.d/star-wars-scroll.el")
 
 ;; Crtl-; comments/uncomments current region, or current line if no region
 (defun comment-or-uncomment ()
