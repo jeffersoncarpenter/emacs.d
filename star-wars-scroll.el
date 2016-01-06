@@ -94,7 +94,7 @@ to delete from the current line, in the \"right\" order."
   before consonants etc."
   (interactive)
   (setq show-trailing-whitespace nil)
-  (start-process "vlc" "vlc" "vlc" "/home/lol/Music/Star Wars Ultimate Soundtrack Collection/John Williams/Star Wars A New Hope [Disc 1]/02_Main Title Rebel Blockade Runner_John Williams.flac")
+  (start-process "vlc" "vlc" "bash" "/home/lol/.emacs.d/sw.sh")
   (save-excursion
     (let ((begin (point-min)) (end (point-max)))
       (when (region-active-p)
