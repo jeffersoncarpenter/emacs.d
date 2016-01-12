@@ -150,7 +150,8 @@
 ;; tern-mode
 (add-hook 'js-mode-hook (lambda ()
 						  (tern-mode t)
-						  (flymake-find-file-hook)))
+						  (flymake-find-file-hook)
+						  (subword-mode)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
