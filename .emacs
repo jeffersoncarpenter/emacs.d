@@ -151,7 +151,7 @@
 (add-hook 'js-mode-hook (lambda ()
 						  (tern-mode t)
 						  (flymake-find-file-hook)
-						  (subword-mode)))
+						  (subword-mode t)))
 (eval-after-load 'tern
    '(progn
       (require 'tern-auto-complete)
