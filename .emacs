@@ -47,6 +47,7 @@
 ;; enable some modes
 (setq column-number-mode t)
 (electric-pair-mode)
+(show-paren-mode)
 
 (load "~/.emacs.d/star-wars-scroll.el")
 
