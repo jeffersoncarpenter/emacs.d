@@ -430,3 +430,8 @@ buffer is not visiting a file."
    "\\(\\s-*\\)\\( :\\|->\\).*$"))
 
 (global-set-key (kbd "C-c C-SPC C-TAB") 'hs-indent)
+
+
+(load "~/.emacs.d/switch-window.el")
+(global-set-key (kbd "C-c o") 'switch-window)
+
