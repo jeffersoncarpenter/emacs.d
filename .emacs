@@ -433,5 +433,5 @@ buffer is not visiting a file."
 
 
 (load "~/.emacs.d/switch-window.el")
-(global-set-key (kbd "C-c o") 'switch-window)
+(global-set-key (kbd "C-x o") 'switch-window)
 
