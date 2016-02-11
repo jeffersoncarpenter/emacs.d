@@ -149,7 +149,10 @@
 
 
 ;; tern-mode
-(add-hook 'js-mode-hook (lambda ()
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq js2-mode-show-strict-warnings nil)
+(add-hook 'js2-mode-hook (lambda ()
 						  (tern-mode t)
 						  (flymake-find-file-hook)
 						  (subword-mode t)))
@@ -433,5 +436,4 @@ buffer is not visiting a file."
 
 
 (load "~/.emacs.d/switch-window.el")
-(global-set-key (kbd "C-x o") 'switch-window)
-
+(global-set-key (kbd "C-c o") 'switch-window)
