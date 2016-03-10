@@ -99,6 +99,9 @@
 ;; browse kill ring
 (load "~/.emacs.d/browse-kill-ring.el")
 
+;; enable graphviz mode
+(require 'graphviz-dot-mode)
+
 ;; enable magit
 (require 'magit)
 
@@ -186,6 +189,7 @@
 (put 'upcase-region 'disabled nil)
 
 
+(add-to-list 'load-path  "~/p/idris-mode")
 (require 'idris-mode)
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
