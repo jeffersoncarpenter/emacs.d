@@ -20,6 +20,10 @@
 ;; show trailing whitespace, please
 (setq-default show-trailing-whitespace t)
 
+;; turn off fucking c-x c-b
+(global-unset-key (kbd "C-x C-b"))
+(global-set-key (kbd "C-x C-b C-b") 'list-buffers-same-window)
+(global-set-key (kbd "C-x M-b") 'list-buffers-same-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; base environment additions ;;
@@ -42,6 +46,20 @@
 ;; additional keys for scrolling a little
 (global-set-key "\M-P" (lambda () (interactive) (scroll-down 1)))
 (global-set-key "\M-N" (lambda () (interactive) (scroll-up 1)))
+
+
+(global-set-key (kbd "s-m") 'recompile)
+(defun bury-compile-buffer-if-successful (buffer string)
+  "Bury a compilation buffer if succeeded without warnings "
+  (if (and
+       (string-match "compilation" (buffer-name buffer))
+       (string-match "finished" string))
+      (run-with-timer 1 nil
+                      (lambda (buf)
+                        (bury-buffer buf)
+                        (switch-to-prev-buffer (get-buffer-window buf) 'kill))
+                      buffer)))
+(add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 
 ;; enable some modes
@@ -356,6 +374,9 @@ inside a RequireJS require or define statement."
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
 (global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
 (global-set-key (kbd "C-, u") 'requirejs-add-dependency)
+(global-set-key (kbd "C-x C-b d") 'requirejs-go-to-definition)
+(global-set-key (kbd "C-x C-b t") (lambda () (interactive) (requirejs-go-to-definition)))
+(global-set-key (kbd "C-x C-b u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
@@ -367,6 +388,7 @@ If point was already at that position, move point to beginning of line."
     (beginning-of-line)
     (if (= oldpos (point))
          (back-to-indentation))))
+
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
@@ -400,8 +422,6 @@ with a space (which are for internal use).  With prefix argument
 ARG, show only buffers that are visiting files."
   (interactive "P")
   (switch-to-buffer (list-buffers-noselect arg)))
-
-(global-set-key (kbd "C-x C-b") 'list-buffers-same-window)
 
 
 (defun sudo-edit (&optional arg)
