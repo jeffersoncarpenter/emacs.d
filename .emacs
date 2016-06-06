@@ -107,6 +107,12 @@
  '(inhibit-startup-screen t))
 
 
+;; enable tramp
+(require 'tramp)
+(setq tramp-default-user "lol"
+      tramp-default-host "71.89.76.184"
+      trampvebrose "5")
+
 ;; enable package manager
 (require 'package)
 (add-to-list 'package-archives
