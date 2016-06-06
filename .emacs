@@ -61,6 +61,10 @@
                       buffer)))
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
+(global-set-key (kbd "s-n") '(lambda () (interactive) (next-line 4)))
+(global-set-key (kbd "s-p") '(lambda () (interactive) (next-line -4)))
+(global-set-key (kbd "s-f") '(lambda () (interactive) (forward-char 4)))
+(global-set-key (kbd "s-b") '(lambda () (interactive) (forward-char -4)))
 
 ;; enable some modes
 (setq column-number-mode t)
