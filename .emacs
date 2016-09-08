@@ -1,4 +1,26 @@
 ;; base environment changes
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(kill-do-not-save-duplicates t)
+ '(save-interprogram-paste-before-kill t)
+ '(delete-active-region nil)
+ '(ac-auto-show-menu t)
+ '(custom-enabled-themes (quote (wombat)))
+ '(inhibit-startup-screen t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(flymake-errline ((((class color)) (:underline (:color "#660000")))))
+ '(whitespace-indentation ((t (:background "gray15" :foreground "gray35"))))
+ '(whitespace-newline ((t (:foreground "gray35" :weight normal))))
+ '(whitespace-space ((t (:background "grey15" :foreground "gray35"))))
+ '(whitespace-tab ((t (:background "grey15" :foreground "gray35")))))
+
 
 ;; take out gui
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -17,8 +39,10 @@
 ;; use good title format
 (setq-default frame-title-format "%b (%f)")
 
-;; show trailing whitespace, please
+;; show whitespace, todo: remove show trailing whitespace
 (setq-default show-trailing-whitespace t)
+(setq whitespace-style '(face tabs spaces trailing space-before-tab indentation empty space-after-tab space-mark tab-mark))
+(global-whitespace-mode 1)
 
 ;; turn off fucking c-x c-b
 (global-unset-key (kbd "C-x C-b"))
@@ -52,13 +76,13 @@
 (defun bury-compile-buffer-if-successful (buffer string)
   "Bury a compilation buffer if succeeded without warnings "
   (if (and
-       (string-match "compilation" (buffer-name buffer))
-       (string-match "finished" string))
-      (run-with-timer 1 nil
-                      (lambda (buf)
-                        (bury-buffer buf)
-                        (switch-to-prev-buffer (get-buffer-window buf) 'kill))
-                      buffer)))
+	   (string-match "compilation" (buffer-name buffer))
+	   (string-match "finished" string))
+	  (run-with-timer 1 nil
+					  (lambda (buf)
+						(bury-buffer buf)
+						(switch-to-prev-buffer (get-buffer-window buf) 'kill))
+					  buffer)))
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 (global-set-key (kbd "s-n") '(lambda () (interactive) (next-line 4)))
@@ -77,8 +101,8 @@
 (defun comment-or-uncomment ()
   (interactive)
   (if (use-region-p)
-      (comment-or-uncomment-region (region-beginning) (region-end))
-    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+	  (comment-or-uncomment-region (region-beginning) (region-end))
+	(comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment)
 (global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
@@ -93,34 +117,22 @@
 (defun insert-newline-before-line ()
   (interactive)
   (progn
-    (move-end-of-line 0)
-    (newline-and-indent)))
+	(move-end-of-line 0)
+	(newline-and-indent)))
 (global-set-key (kbd "C-<return>") 'insert-newline-before-line)
 
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(kill-do-not-save-duplicates t)
- '(save-interprogram-paste-before-kill t)
- '(delete-active-region nil)
- '(ac-auto-show-menu t)
- '(custom-enabled-themes (quote (wombat)))
- '(inhibit-startup-screen t))
 
 
 ;; enable tramp
 (require 'tramp)
 (setq tramp-default-user "lol"
-      tramp-default-host "71.89.76.184"
-      trampvebrose "5")
+	  tramp-default-host "71.89.76.184"
+	  trampvebrose "5")
 
 ;; enable package manager
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/")
+			 '("melpa" . "http://melpa.milkbox.net/packages/")
 			 '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
@@ -143,7 +155,7 @@
 (global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c C-x C-c") 'flymake-start-syntax-check)
 
-; run bashrc.cmd if it exists
+										; run bashrc.cmd if it exists
 (defun setup-shell ()
   "runs C:\bashrc.cmd"
   (let ((filename "c:\\bashrc.cmd"))
@@ -181,36 +193,36 @@
 
 ;; tern-mode
 (require 'js2-mode)
+(require 'js-comint)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
-						  (tern-mode t)
-						  (flymake-find-file-hook)
-						  (subword-mode t)))
+						   (tern-mode t)
+						   (flymake-find-file-hook)
+						   (subword-mode t)
+						   (local-set-key "\C-x\C-e" 'js-send-last-sexp)
+						   (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
+						   (local-set-key "\C-cb" 'js-send-buffer)
+						   (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
+						   (local-set-key "\C-cl" 'js-load-file-and-go)))
 (eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+  '(progn
+	 (require 'tern-auto-complete)
+	 (tern-ac-setup)))
 
 ;; csharp mode
 (add-hook 'csharp-mode-hook
-	  (lambda ()
-            (c-set-style "c#")
-            (define-key csharp-mode-map (kbd "{") nil)
-            (define-key csharp-mode-map (kbd "}") nil)
-            (define-key csharp-mode-map (kbd ",") nil)))
+		  (lambda ()
+			(c-set-style "c#")
+			(define-key csharp-mode-map (kbd "{") nil)
+			(define-key csharp-mode-map (kbd "}") nil)
+			(define-key csharp-mode-map (kbd ",") nil)))
 
 
 
 ;; flymake color
 
 (require 'org-install)
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-  '(flymake-errline ((((class color)) (:underline (:color "#660000"))))))
 
 
 
@@ -249,22 +261,22 @@
 (defun find-namespace (word)
   "Returns the namespace of a symbol"
   (with-current-buffer (find-tag-noselect word)
-    (save-excursion
-      (beginning-of-buffer)
-      (search-forward "namespace")
-      (forward-char) ; go past space
-      (buffer-substring (point) (line-end-position)))))
+	(save-excursion
+	  (beginning-of-buffer)
+	  (search-forward "namespace")
+	  (forward-char) ; go past space
+	  (buffer-substring (point) (line-end-position)))))
 
 
 (defun add-using (symbol)
   "Adds a using directive to the top of the file"
   (let ((using (concat "using " (find-namespace symbol) ";")))
-    (save-excursion
-      (beginning-of-buffer)
-      (if (not (search-forward using (point-max) t))
-          (progn
-            (beginning-of-buffer)
-            (insert using "\n"))))))
+	(save-excursion
+	  (beginning-of-buffer)
+	  (if (not (search-forward using (point-max) t))
+		  (progn
+			(beginning-of-buffer)
+			(insert using "\n"))))))
 
 (defun add-using-for-word-at-point ()
   "Adds using for word at point"
@@ -285,11 +297,11 @@
 (defun index-of (el list &optional index)
   "Returns the index of el within list"
   (let ((n (if index index 0)))
-    (if (equal el (car list))
-        n
-      (let ((rest (cdr list)))
-        (if rest
-            (index-of el (cdr list) (+ n 1)))))))
+	(if (equal el (car list))
+		n
+	  (let ((rest (cdr list)))
+		(if rest
+			(index-of el (cdr list) (+ n 1)))))))
 
 
 (defun requirejs-dependencies ()
@@ -357,28 +369,28 @@
 inside a RequireJS require or define statement."
   (interactive)
   (let ((word (word-at-point)))
-    (save-excursion
-      (requirejs-jump-to-require)
-      (let ((index (index-of word (requirejs-dependencies))))
-        (if index
+	(save-excursion
+	  (requirejs-jump-to-require)
+	  (let ((index (index-of word (requirejs-dependencies))))
+		(if index
 			(nth index (requirejs-paths))
-          (message "Unable to find file"))))))
+		  (message "Unable to find file"))))))
 
 (defun parent-directory (dir)
   (unless (equal "c:/" dir)
-    (file-name-directory (directory-file-name dir))))
+	(file-name-directory (directory-file-name dir))))
 
 (defun requirejs-go-to-definition (&optional root)
   "Opens file corresponding to required thing under point"
   (interactive)
   (let* ((root (if root root (file-name-directory (buffer-file-name))))
-         (rel-path (requirejs-find-relative-path))
-         (full-path (concat root rel-path ".js")))
-    (if (file-exists-p full-path)
-        (find-file full-path)
-      (let ((parent (parent-directory root)))
-        (if parent
-            (requirejs-go-to-definition parent))))))
+		 (rel-path (requirejs-find-relative-path))
+		 (full-path (concat root rel-path ".js")))
+	(if (file-exists-p full-path)
+		(find-file full-path)
+	  (let ((parent (parent-directory root)))
+		(if parent
+			(requirejs-go-to-definition parent))))))
 
 
 (global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
@@ -395,9 +407,9 @@ Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of line."
   (interactive)
   (let ((oldpos (point)))
-    (beginning-of-line)
-    (if (= oldpos (point))
-         (back-to-indentation))))
+	(beginning-of-line)
+	(if (= oldpos (point))
+		(back-to-indentation))))
 
 
 (global-set-key [home] 'smart-beginning-of-line)
@@ -418,7 +430,7 @@ With argument ARG, do this that many times."
 (global-set-key "\M-d" 'forward-delete-word)
 
 
-; note to self: what the fuck is this for?  C mode?
+										; note to self: what the fuck is this for?  C mode?
 (setq tab-width 4)
 
 
@@ -442,15 +454,15 @@ Will also prompt for a file to visit if current
 buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:"
-                         (ido-read-file-name "Find file(as root): ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+	  (find-file (concat "/sudo:root@localhost:"
+						 (ido-read-file-name "Find file(as root): ")))
+	(find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 
 (setq-default c-basic-offset 4
-							js2-basic-offset 2
-							tab-width 4
-							indent-tabs-mode t)
+			  js2-basic-offset 2
+			  tab-width 4
+			  indent-tabs-mode t)
 
 (defalias 'rs 'replace-string)
 (defalias 'rb 'revert-buffer)
