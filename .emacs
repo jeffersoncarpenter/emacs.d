@@ -49,9 +49,12 @@
 (global-set-key (kbd "C-x C-b C-b") 'list-buffers-same-window)
 (global-set-key (kbd "C-x M-b") 'list-buffers-same-window)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; base environment additions ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;
+;; etc ;;
+;;;;;;;;;
+
+(setq initial-scratch-message "")
+
 
 
 ;; additional keys for executing extended command
