@@ -476,6 +476,7 @@ buffer is not visiting a file."
 			  indent-tabs-mode t)
 
 (defalias 'rs 'replace-string)
+(defalias 'qrr 'query-replace-regexp)
 (defalias 'rb 'revert-buffer)
 
 
