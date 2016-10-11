@@ -37,7 +37,7 @@
 (setq require-final-newline nil)
 
 ;; use good title format
-(setq-default frame-title-format "%b (%f)")
+(setq-default frame-title-format '(:eval (concat "%b (" default-directory ")")))
 
 ;; show whitespace, todo: remove show trailing whitespace
 (setq-default show-trailing-whitespace t)
@@ -264,6 +264,7 @@
   (save-excursion
 	(goto-char n)
 	(line-end-position)))
+
 
 
 ;; C# and JavaScript shit
