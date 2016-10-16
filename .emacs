@@ -8,6 +8,8 @@
  '(save-interprogram-paste-before-kill t)
  '(delete-active-region nil)
  '(ac-auto-show-menu t)
+ '(company-auto-complete t)
+ '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(inhibit-startup-screen t))
 (custom-set-faces
