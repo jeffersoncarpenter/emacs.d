@@ -9,6 +9,7 @@
  '(delete-active-region nil)
  '(ac-auto-show-menu t)
  '(company-auto-complete t)
+ '(company-auto-complete-chars nil)
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(inhibit-startup-screen t))
@@ -21,7 +22,8 @@
  '(whitespace-indentation ((t (:background "gray15" :foreground "gray35"))))
  '(whitespace-newline ((t (:foreground "gray35" :weight normal))))
  '(whitespace-space ((t (:background "grey15" :foreground "gray35"))))
- '(whitespace-tab ((t (:background "grey15" :foreground "gray35")))))
+ '(whitespace-tab ((t (:background "grey15" :foreground "gray35"))))
+ '(whitespace-trailing ((t (:background "gray15" :foreground "gray35" :weight bold)))))
 
 
 ;; take out gui
@@ -51,26 +53,19 @@
 (global-set-key (kbd "C-x C-b C-b") 'list-buffers-same-window)
 (global-set-key (kbd "C-x M-b") 'list-buffers-same-window)
 
-;;;;;;;;;
-;; etc ;;
-;;;;;;;;;
-
+;; disable scratch message
 (setq initial-scratch-message "")
-
-
 
 ;; additional keys for executing extended command
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-xm" 'eval-expression)
 
-
 ;; change window size
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-
 
 ;; additional keys for scrolling a little
 (global-set-key "\M-P" (lambda () (interactive) (scroll-down 1)))
@@ -183,6 +178,53 @@
 
 ;; major modes
 
+
+;; clang-format
+(require 'clang-format)
+
+;; cc-mode
+;; based on "gnu" style
+(add-hook 'c-mode-hook 'c-mode-stuff)
+(defun c-mode-stuff ()
+  (company-mode)
+  (if (not (member 'company-rtags company-backends))
+      (push 'company-rtags company-backends))
+  (define-key c-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
+  (define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point))
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-hook 'c++-mode-hook 'c++-mode-stuff)
+(defun c++-mode-stuff ()
+  (company-mode)
+  (if (not (member 'company-rtags company-backends))
+      (push 'company-rtags company-backends))
+  (define-key c++-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
+  (define-key c++-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point)
+  (define-key c++-mode-map (kbd "TAB") 'clang-format-region)
+  (add-to-list 'c-style-alist '("user"
+				(c-basic-offset . 4)
+				(c-comment-only-line-offset 0 . 0)
+				(c-hanging-braces-alist
+				 (substatement-open before after)
+				 (arglist-cont-nonempty))
+				(c-offsets-alist
+				 (arglist-cont-nonempty . 0)
+				 (statement-block-intro . +)
+				 (knr-argdecl-intro . 5)
+				 (substatement-open . +)
+				 (substatement-label . 0)
+				 (label . 0)
+				 (statement-case-open . +)
+				 (statement-cont . 0)
+				 (arglist-intro . +)
+				 (arglist-close . 0)
+				 (inline-open . 0)
+				 (brace-list-open . +)
+				 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont))
+				(c-special-indent-hook . c-gnu-impose-minimum)
+				(c-block-comment-prefix . ""))))
+(setq c-default-style "user")
+
 ;; html2-mode
 (load "~/.emacs.d/html2-mode.el")
 
@@ -206,18 +248,13 @@
 
 ;; tern-mode
 (require 'js2-mode)
-(require 'js-comint)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
 						   (tern-mode t)
 						   (flymake-find-file-hook)
 						   (subword-mode t)
-						   (local-set-key "\C-x\C-e" 'js-send-last-sexp)
-						   (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
-						   (local-set-key "\C-cb" 'js-send-buffer)
-						   (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
-						   (local-set-key "\C-cl" 'js-load-file-and-go)))
+						   (setq indent-tabs-mode nil)))
 (eval-after-load 'tern
   '(progn
 	 (require 'tern-auto-complete)
@@ -250,6 +287,13 @@
 (add-to-list 'load-path  "~/.emacs.d/structured-haskell-mode/elisp")
 (require 'shm)
 (setq shm-program-name "~/.emacs.d/structured-haskell-mode/dist/build/structured-haskell-mode/structured-haskell-mode")
+
+
+;; rtags stuff
+(load "~/.emacs.d/rtags.el")
+(load "~/.emacs.d/company-rtags.el")
+(setq rtags-autostart-diagnostics t)
+(setq rtags-completions-enabled t)
 
 
 ;; good stuff
@@ -407,12 +451,12 @@ inside a RequireJS require or define statement."
 			(requirejs-go-to-definition parent))))))
 
 
-(global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
-(global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
-(global-set-key (kbd "C-, u") 'requirejs-add-dependency)
-(global-set-key (kbd "C-x C-b d") 'requirejs-go-to-definition)
-(global-set-key (kbd "C-x C-b t") (lambda () (interactive) (requirejs-go-to-definition)))
-(global-set-key (kbd "C-x C-b u") 'requirejs-add-dependency)
+;(global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
+;(global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
+;(global-set-key (kbd "C-, u") 'requirejs-add-dependency)
+;(global-set-key (kbd "C-x C-b d") 'requirejs-go-to-definition)
+;(global-set-key (kbd "C-x C-b t") (lambda () (interactive) (requirejs-go-to-definition)))
+;(global-set-key (kbd "C-x C-b u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
@@ -481,9 +525,6 @@ buffer is not visiting a file."
 (defalias 'rs 'replace-string)
 (defalias 'qrr 'query-replace-regexp)
 (defalias 'rb 'revert-buffer)
-
-
-(global-auto-complete-mode t)
 
 
 (defun hs-indent ()
