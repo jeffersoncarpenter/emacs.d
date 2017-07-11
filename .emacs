@@ -143,19 +143,27 @@
 			 '("melpa" . "http://melpa.milkbox.net/packages/")
 			 '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+(featurep 'magitt)
+(defun requirePackage (feature)
+  "Installs feature if not present, then requires it"
+  (when (not (featurep feature))
+    (package-install feature))
+  (require feature))
 
 ;; browse kill ring
 (load "~/.emacs.d/browse-kill-ring.el")
 
 ;; enable graphviz mode
-(require 'graphviz-dot-mode)
+(requirePackage 'graphviz-dot-mode)
 
 ;; enable magit
-(require 'magit)
+(requirePackage 'magit)
 
 ;; enable flymake for js
 
-(require 'flymake)
+(requirePackage 'flymake)
 (load "~/.emacs.d/flymake-cursor.el")
 (load "~/.emacs.d/flymake-node-jshint.el")
 
@@ -180,7 +188,7 @@
 
 
 ;; clang-format
-(require 'clang-format)
+(requirePackage 'clang-format)
 
 ;; cc-mode
 ;; based on "gnu" style
@@ -249,7 +257,7 @@
 
 
 ;; tern-mode
-(require 'js2-mode)
+(requirePackage 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
@@ -282,7 +290,7 @@
 
 
 (add-to-list 'load-path  "~/p/idris-mode")
-(require 'idris-mode)
+(requirePackage 'idris-mode)
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
@@ -292,6 +300,7 @@
 
 
 ;; rtags stuff
+(requirePackage 'company) ; ensure company is installed
 (load "~/.emacs.d/rtags.el")
 (load "~/.emacs.d/company-rtags.el")
 (setq rtags-autostart-diagnostics t)
