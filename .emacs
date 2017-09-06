@@ -23,7 +23,8 @@
  '(whitespace-newline ((t (:foreground "gray35" :weight normal))))
  '(whitespace-space ((t (:background "grey15" :foreground "gray35"))))
  '(whitespace-tab ((t (:background "grey15" :foreground "gray35"))))
- '(whitespace-trailing ((t (:background "gray15" :foreground "gray35" :weight bold)))))
+ '(whitespace-trailing ((t (:background "gray15" :foreground "gray35" :weight bold))))
+ '(whitespace-empty ((t (:background "grey15" :foreground "gray35")))))
 
 
 ;; take out gui
