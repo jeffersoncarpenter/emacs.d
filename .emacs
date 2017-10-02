@@ -146,7 +146,7 @@
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
-(featurep 'magitt)
+
 (defun requirePackage (feature)
   "Installs feature if not present, then requires it"
   (when (not (featurep feature))
@@ -552,3 +552,32 @@ buffer is not visiting a file."
 
 (load "~/.emacs.d/switch-window.el")
 (global-set-key (kbd "C-c o") 'switch-window)
+
+;; open shell in same window
+(add-to-list 'display-buffer-alist
+             '("^\\*shell\\*$" . (display-buffer-same-window)))
+
+;; break company-clang
+(defsubst company-clang--build-location (pos)
+  (save-excursion
+    (goto-char pos)
+    (format "%s:%d:%d"
+            (if (company-clang--auto-save-p) buffer-file-name "-")
+            (line-number-at-pos)
+            (length
+             (encode-coding-region
+              (line-beginning-position)
+              (point)
+              'utf-8
+              t)))))
+(defun company-clang--candidates (prefix callback)
+  (and (company-clang--auto-save-p)
+       (buffer-modified-p)
+       (basic-save-buffer))
+  (when (null company-clang--prefix)
+    (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
+                                  'none)))
+  (apply 'company-clang--start-process
+         prefix
+         callback
+         (company-clang--build-complete-args (point))))
