@@ -106,8 +106,8 @@
 
 (global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 4)))
 (global-set-key (kbd "C-S-p") '(lambda () (interactive) (next-line -4)))
-(global-set-key (kbd "C-S-f") '(lambda () (interactive) (forward-char 4)))
-(global-set-key (kbd "C-S-b") '(lambda () (interactive) (forward-char -4)))
+(global-set-key (kbd "C-S-f") '(lambda () (interactive) (forward-char 10)))
+(global-set-key (kbd "C-S-b") '(lambda () (interactive) (forward-char -10)))
 
 ;; enable some modes
 (setq column-number-mode t)
