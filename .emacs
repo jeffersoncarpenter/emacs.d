@@ -583,4 +583,4 @@ buffer is not visiting a file."
 (require 'sublimity-scroll)
 (require 'sublimity-map)
 
-(require 'tabbar)
+(require-package 'tabbar)
