@@ -1,30 +1,44 @@
 ;; base environment changes
+(setq user-init-file (file-truename "~/.emacs.d/.emacs"))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(kill-do-not-save-duplicates t)
- '(save-interprogram-paste-before-kill t)
- '(delete-active-region nil)
  '(ac-auto-show-menu t)
  '(company-auto-complete t)
  '(company-auto-complete-chars nil)
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
- '(inhibit-startup-screen t))
+ '(delete-active-region nil)
+ '(inhibit-startup-screen t)
+ '(kill-do-not-save-duplicates t)
+ '(package-selected-packages
+   (quote
+	(tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+ '(save-interprogram-paste-before-kill t)
+ '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(flymake-errline ((((class color)) (:underline (:color "#660000")))))
+ '(whitespace-empty ((t (:background "grey15" :foreground "gray35"))))
  '(whitespace-indentation ((t (:background "gray15" :foreground "gray35"))))
  '(whitespace-newline ((t (:foreground "gray35" :weight normal))))
  '(whitespace-space ((t (:background "grey15" :foreground "gray35"))))
  '(whitespace-tab ((t (:background "grey15" :foreground "gray35"))))
  '(whitespace-trailing ((t (:background "gray15" :foreground "gray35" :weight bold)))))
 
+;; enable package manager
+(require 'package)
+(add-to-list 'package-archives
+			 '("melpa" . "http://melpa.milkbox.net/packages/")
+			 '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
 ;; take out gui
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -90,6 +104,11 @@
 (global-set-key (kbd "s-f") '(lambda () (interactive) (forward-char 4)))
 (global-set-key (kbd "s-b") '(lambda () (interactive) (forward-char -4)))
 
+(global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 4)))
+(global-set-key (kbd "C-S-p") '(lambda () (interactive) (next-line -4)))
+(global-set-key (kbd "C-S-f") '(lambda () (interactive) (forward-char 10)))
+(global-set-key (kbd "C-S-b") '(lambda () (interactive) (forward-char -10)))
+
 ;; enable some modes
 (setq column-number-mode t)
 (electric-pair-mode)
@@ -137,25 +156,24 @@
 	  tramp-default-host "71.89.76.184"
 	  trampvebrose "5")
 
-;; enable package manager
-(require 'package)
-(add-to-list 'package-archives
-			 '("melpa" . "http://melpa.milkbox.net/packages/")
-			 '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
+(defun require-package (feature)
+  "Installs feature if not present, then requires it"
+  (when (not (featurep feature))
+    (package-install feature))
+  (require feature))
 
 ;; browse kill ring
 (load "~/.emacs.d/browse-kill-ring.el")
 
 ;; enable graphviz mode
-(require 'graphviz-dot-mode)
+(require-package 'graphviz-dot-mode)
 
 ;; enable magit
-(require 'magit)
+(require-package 'magit)
 
 ;; enable flymake for js
 
-(require 'flymake)
+(require-package 'flymake)
 (load "~/.emacs.d/flymake-cursor.el")
 (load "~/.emacs.d/flymake-node-jshint.el")
 
@@ -180,7 +198,7 @@
 
 
 ;; clang-format
-(require 'clang-format)
+(require-package 'clang-format)
 
 ;; cc-mode
 ;; based on "gnu" style
@@ -250,7 +268,7 @@
 
 
 ;; tern-mode
-(require 'js2-mode)
+(require-package 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
@@ -283,13 +301,14 @@
 
 
 (add-to-list 'load-path  "~/p/idris-mode")
-(require 'idris-mode)
+(require-package 'idris-mode)
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
 (require 'shm)
 
 ;; rtags stuff
+(require-package 'company) ; ensure company is installed
 (load "~/.emacs.d/rtags.el")
 (load "~/.emacs.d/company-rtags.el")
 (setq rtags-autostart-diagnostics t)
@@ -540,3 +559,26 @@ buffer is not visiting a file."
 
 (load "~/.emacs.d/switch-window.el")
 (global-set-key (kbd "C-c o") 'switch-window)
+
+;; open shell in same window
+(add-to-list 'display-buffer-alist
+             '("^\\*shell\\*$" . (display-buffer-same-window)))
+
+;; break company-clang
+(defun company-clang--candidates (prefix callback)
+  (and (company-clang--auto-save-p)
+       (buffer-modified-p)
+       (basic-save-buffer))
+  (when (null company-clang--prefix)
+    (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
+                                  'none)))
+  (apply 'company-clang--start-process
+         prefix
+         callback
+         (company-clang--build-complete-args (point))))
+
+(require-package 'sublimity)
+(require 'sublimity-scroll)
+(require 'sublimity-map)
+
+(require-package 'tabbar)
