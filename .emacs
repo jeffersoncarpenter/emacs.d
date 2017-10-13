@@ -203,6 +203,7 @@
   (define-key c++-mode-map (kbd "<C-tab>") 'clang-format-buffer)
   (define-key c++-mode-map (kbd "TAB") 'clang-format-region)
   (setq indent-tabs-mode nil)
+  (subword-mode t)
   (add-to-list 'c-style-alist '("user"
 				(c-basic-offset . 4)
 				(c-comment-only-line-offset 0 . 0)
