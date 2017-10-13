@@ -287,10 +287,7 @@
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
-(add-to-list 'load-path  "~/.emacs.d/structured-haskell-mode/elisp")
 (require 'shm)
-(setq shm-program-name "~/.emacs.d/structured-haskell-mode/dist/build/structured-haskell-mode/structured-haskell-mode")
-
 
 ;; rtags stuff
 (load "~/.emacs.d/rtags.el")
