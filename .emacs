@@ -584,3 +584,8 @@ buffer is not visiting a file."
 (require 'sublimity-map)
 
 (require-package 'tabbar)
+
+(define-minor-mode display-enclosing-scopes-mode
+  "Toggle display enclosing scopes mode."
+  
+  )
