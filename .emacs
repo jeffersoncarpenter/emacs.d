@@ -15,7 +15,7 @@
  '(kill-do-not-save-duplicates t)
  '(package-selected-packages
    (quote
-	(tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+	(tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
  '(save-interprogram-paste-before-kill t)
  '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
@@ -268,11 +268,13 @@
 
 ;; tern-mode
 (require-package 'js2-mode)
+(require-package 'tern)
+(require-package 'tern-auto-complete)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
 						   (tern-mode t)
-						   (flymake-find-file-hook)
+						   ;;(flymake-find-file-hook) ; what if we're in scratch buffer
 						   (subword-mode t)
 						   (setq indent-tabs-mode nil)))
 (eval-after-load 'tern
