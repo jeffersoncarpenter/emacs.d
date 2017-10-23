@@ -127,9 +127,8 @@
 (global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
 
 
-;; back-window
-(defun back-window () (interactive) (other-window -1))
-(global-set-key (kbd "C-x O") 'back-window)
+(load "~/.emacs.d/switch-window.el")
+(global-set-key (kbd "C-x o") 'switch-window)
 
 
 ;; Ctrl-Enter works like in Visual Studio
@@ -558,9 +557,6 @@ buffer is not visiting a file."
 
 (global-set-key (kbd "C-c C-SPC C-TAB") 'hs-indent)
 
-
-(load "~/.emacs.d/switch-window.el")
-(global-set-key (kbd "C-c o") 'switch-window)
 
 ;; open shell in same window
 (add-to-list 'display-buffer-alist
