@@ -587,3 +587,5 @@ buffer is not visiting a file."
   "Toggle display enclosing scopes mode."
   
   )
+
+(require-package 'haskell-mode)
