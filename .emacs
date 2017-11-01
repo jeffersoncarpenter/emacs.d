@@ -261,9 +261,6 @@
 
 ;; minor modes
 
-;; haskell indent mode
-(add-hook 'haskell-mode-hook 'structured-haskell-mode)
-
 
 ;; tern-mode
 (require-package 'js2-mode)
