@@ -295,6 +295,7 @@
 
 
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 
 (add-to-list 'load-path  "~/p/idris-mode")
