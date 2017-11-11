@@ -15,7 +15,7 @@
  '(kill-do-not-save-duplicates t)
  '(package-selected-packages
    (quote
-	(tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+	(tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
  '(save-interprogram-paste-before-kill t)
  '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
@@ -127,9 +127,8 @@
 (global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
 
 
-;; back-window
-(defun back-window () (interactive) (other-window -1))
-(global-set-key (kbd "C-x O") 'back-window)
+(load "~/.emacs.d/switch-window.el")
+(global-set-key (kbd "C-x o") 'switch-window)
 
 
 ;; Ctrl-Enter works like in Visual Studio
@@ -263,17 +262,16 @@
 
 ;; minor modes
 
-;; haskell indent mode
-(add-hook 'haskell-mode-hook 'structured-haskell-mode)
-
 
 ;; tern-mode
 (require-package 'js2-mode)
+(require-package 'tern)
+(require-package 'tern-auto-complete)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
-						   (tern-mode t)
-						   (flymake-find-file-hook)
+						   ;;(tern-mode t)
+						   ;;(flymake-find-file-hook) ; what if we're in scratch buffer
 						   (subword-mode t)
 						   (setq indent-tabs-mode nil)))
 (eval-after-load 'tern
@@ -298,6 +296,7 @@
 
 
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 
 (add-to-list 'load-path  "~/p/idris-mode")
@@ -557,9 +556,6 @@ buffer is not visiting a file."
 (global-set-key (kbd "C-c C-SPC C-TAB") 'hs-indent)
 
 
-(load "~/.emacs.d/switch-window.el")
-(global-set-key (kbd "C-c o") 'switch-window)
-
 ;; open shell in same window
 (add-to-list 'display-buffer-alist
              '("^\\*shell\\*$" . (display-buffer-same-window)))
@@ -582,3 +578,10 @@ buffer is not visiting a file."
 (require 'sublimity-map)
 
 (require-package 'tabbar)
+
+(define-minor-mode display-enclosing-scopes-mode
+  "Toggle display enclosing scopes mode."
+  
+  )
+
+(require-package 'haskell-mode)
