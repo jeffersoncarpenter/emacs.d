@@ -220,6 +220,7 @@
   (define-key c++-mode-map (kbd "<C-tab>") 'clang-format-buffer)
   (define-key c++-mode-map (kbd "TAB") 'clang-format-region)
   (setq indent-tabs-mode nil)
+  (subword-mode t)
   (add-to-list 'c-style-alist '("user"
 				(c-basic-offset . 4)
 				(c-comment-only-line-offset 0 . 0)
@@ -303,10 +304,7 @@
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
-(add-to-list 'load-path  "~/.emacs.d/structured-haskell-mode/elisp")
 (require 'shm)
-(setq shm-program-name "~/.emacs.d/structured-haskell-mode/dist/build/structured-haskell-mode/structured-haskell-mode")
-
 
 ;; rtags stuff
 (require-package 'company) ; ensure company is installed
