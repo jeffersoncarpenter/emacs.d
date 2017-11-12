@@ -304,7 +304,7 @@
 (define-key idris-mode-map (kbd "C-c C-SPC") nil)
 
 
-(require 'shm)
+;; (require 'shm)
 
 ;; rtags stuff
 (require-package 'company) ; ensure company is installed
