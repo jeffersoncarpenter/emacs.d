@@ -103,6 +103,8 @@
 (global-set-key (kbd "s-p") '(lambda () (interactive) (next-line -4)))
 (global-set-key (kbd "s-f") '(lambda () (interactive) (forward-char 4)))
 (global-set-key (kbd "s-b") '(lambda () (interactive) (forward-char -4)))
+(global-set-key (kbd "M-n") '(lambda () (interactive) (next-line 4)))
+(global-set-key (kbd "M-p") '(lambda () (interactive) (next-line -4)))
 
 (global-set-key (kbd "C-S-n") '(lambda () (interactive) (next-line 4)))
 (global-set-key (kbd "C-S-p") '(lambda () (interactive) (next-line -4)))
