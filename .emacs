@@ -587,5 +587,5 @@ buffer is not visiting a file."
   )
 
 (require-package 'haskell-mode)
-
+(require-package 'go-mode)
 (require-package 'markdown-mode)
