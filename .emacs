@@ -587,3 +587,64 @@ buffer is not visiting a file."
 (require-package 'haskell-mode)
 (require-package 'go-mode)
 (require-package 'markdown-mode)
+
+
+;; 
+(defun js--indent-in-array-comp (bracket)
+  "Return non-nil if we think we're in an array comprehension.
+In particular, return the buffer position of the first `for' kwd."
+  (let ((end (point)))
+    (save-excursion
+      (goto-char bracket)
+      (when (looking-at "\\[")
+        (forward-char 1)
+        (js--forward-syntactic-ws)
+        (if (looking-at "[[{]")
+            (let (forward-sexp-function) ; Use Lisp version.
+              (forward-sexp)             ; Skip destructuring form.
+              (js--forward-syntactic-ws)
+              (if (and (/= (char-after) ?,) ; Regular array.
+                       (looking-at "for"))
+                  (match-beginning 0)))
+          ;; To skip arbitrary expressions we need the parser,
+          ;; so we'll just guess at it.
+          (if (and (> end (point)) ; Not empty literal.
+                   (re-search-forward "[^,]]* \\(for\\) " end t)
+                   ;; Not inside comment or string literal.
+                   (not (nth 8 (parse-partial-sexp bracket (point))))
+                   (eq
+                    (nth 0 (parse-partial-sexp bracket (point)))
+                    (1+ (nth 0 (parse-partial-sexp bracket bracket)))))
+              (match-beginning 1)))))))
+
+(defun js2-indent-in-array-comp (parse-status)
+  "Return non-nil if we think we're in an array comprehension.
+In particular, return the buffer position of the first `for' kwd."
+  (let ((bracket (nth 1 parse-status))
+        (end (point)))
+    (when bracket
+      (save-excursion
+        (goto-char bracket)
+        (when (looking-at "\\[")
+          (forward-char 1)
+          (js2-forward-sws)
+          (if (looking-at "[[{]")
+              (let (forward-sexp-function) ; use Lisp version
+                (forward-sexp)             ; skip destructuring form
+                (js2-forward-sws)
+                (if (and (/= (char-after) ?,) ; regular array
+                         (looking-at "for"))
+                    (match-beginning 0)))
+            ;; to skip arbitrary expressions we need the parser,
+            ;; so we'll just guess at it.
+            (if (and (> end (point)) ; not empty literal
+                     (re-search-forward "[^,]]* \\(for\\) " end t)
+                     ;; not inside comment or string literal
+                     (let ((bracket-state (parse-partial-sexp bracket bracket))
+                           (state (parse-partial-sexp bracket (point))))
+                       (and
+                        (not (nth 3 state))
+                        (not (nth 4 state))
+                        (eq (nth 0 state)
+                            (1+ (nth 0 state))))))
+                (match-beginning 1))))))))
