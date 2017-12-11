@@ -653,3 +653,4 @@ In particular, return the buffer position of the first `for' kwd."
 
 (define-key with-editor-mode-map [remap kill-buffer] nil)
 (define-key magit-mode-map (kbd "e") nil)
+(global-set-key (kbd "C-x C-b C-m") 'magit-status)
