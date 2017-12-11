@@ -650,3 +650,6 @@ In particular, return the buffer position of the first `for' kwd."
                         (eq (nth 0 state)
                             (1+ (nth 0 state))))))
                 (match-beginning 1))))))))
+
+(define-key with-editor-mode-map [remap kill-buffer] nil)
+(define-key magit-mode-map (kbd "e") nil)
