@@ -11,11 +11,12 @@
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(delete-active-region nil)
+ '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(kill-do-not-save-duplicates t)
  '(package-selected-packages
    (quote
-	(tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+    (tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
  '(save-interprogram-paste-before-kill t)
  '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
