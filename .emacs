@@ -509,7 +509,7 @@ With argument ARG, do this that many times."
 (global-set-key "\M-d" 'forward-delete-word)
 
 
-										; note to self: what the fuck is this for?  C mode?
+;; note to self: what the fuck is this for?  C mode?
 (setq tab-width 4)
 
 
