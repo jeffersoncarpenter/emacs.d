@@ -35,8 +35,8 @@
 ;; enable package manager
 (require 'package)
 (add-to-list 'package-archives
-			 '("melpa" . "http://melpa.milkbox.net/packages/")
-			 '("marmalade" . "http://marmalade-repo.org/packages/"))
+             '("melpa" . "http://melpa.milkbox.net/packages/")
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -91,13 +91,13 @@
 (defun bury-compile-buffer-if-successful (buffer string)
   "Bury a compilation buffer if succeeded without warnings "
   (if (and
-	   (string-match "compilation" (buffer-name buffer))
-	   (string-match "finished" string))
-	  (run-with-timer 1 nil
-					  (lambda (buf)
-						(bury-buffer buf)
-						(switch-to-prev-buffer (get-buffer-window buf) 'kill))
-					  buffer)))
+       (string-match "compilation" (buffer-name buffer))
+       (string-match "finished" string))
+      (run-with-timer 1 nil
+                      (lambda (buf)
+                        (bury-buffer buf)
+                        (switch-to-prev-buffer (get-buffer-window buf) 'kill))
+                      buffer)))
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 (global-set-key (kbd "s-n") '(lambda () (interactive) (next-line 4)))
@@ -123,8 +123,8 @@
 (defun comment-or-uncomment ()
   (interactive)
   (if (use-region-p)
-	  (comment-or-uncomment-region (region-beginning) (region-end))
-	(comment-or-uncomment-region (line-beginning-position) (line-end-position))))
+      (comment-or-uncomment-region (region-beginning) (region-end))
+    (comment-or-uncomment-region (line-beginning-position) (line-end-position))))
 
 (global-set-key (kbd "C-;") 'comment-or-uncomment)
 (global-set-key (kbd "C-x C-k C-r") 'comment-or-uncomment)
@@ -138,8 +138,8 @@
 (defun insert-newline-before-line ()
   (interactive)
   (progn
-	(move-end-of-line 0)
-	(newline-and-indent)))
+    (move-end-of-line 0)
+    (newline-and-indent)))
 (global-set-key (kbd "C-<return>") 'insert-newline-before-line)
 
 ;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
@@ -147,16 +147,16 @@
   "Takes a multi-line paragraph and makes it into a single line of text."
   (interactive (progn (barf-if-buffer-read-only) '(t)))
   (let ((fill-column (point-max))
-		;; This would override `fill-column' if it's an integer.
-		(emacs-lisp-docstring-fill-column t))
-	(fill-paragraph nil region)))
+        ;; This would override `fill-column' if it's an integer.
+        (emacs-lisp-docstring-fill-column t))
+    (fill-paragraph nil region)))
 (define-key global-map "\M-Q" 'unfill-paragraph)
 
 ;; enable tramp
 (require 'tramp)
 (setq tramp-default-user "lol"
-	  tramp-default-host "71.89.76.184"
-	  trampvebrose "5")
+      tramp-default-host "71.89.76.184"
+      trampvebrose "5")
 
 (defun require-package (feature)
   "Installs feature if not present, then requires it"
@@ -183,7 +183,7 @@
 (global-set-key (kbd "C-c C-x C-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c C-x C-c") 'flymake-start-syntax-check)
 
-										; run bashrc.cmd if it exists
+                                        ; run bashrc.cmd if it exists
 (defun setup-shell ()
   "runs C:\bashrc.cmd"
   (let ((filename "c:\\bashrc.cmd"))
@@ -225,27 +225,27 @@
   (setq indent-tabs-mode nil)
   (subword-mode t)
   (add-to-list 'c-style-alist '("user"
-				(c-basic-offset . 4)
-				(c-comment-only-line-offset 0 . 0)
-				(c-hanging-braces-alist
-				 (substatement-open before after)
-				 (arglist-cont-nonempty))
-				(c-offsets-alist
-				 (arglist-cont-nonempty . 0)
-				 (statement-block-intro . +)
-				 (knr-argdecl-intro . 5)
-				 (substatement-open . +)
-				 (substatement-label . 0)
-				 (label . 0)
-				 (statement-case-open . +)
-				 (statement-cont . 0)
-				 (arglist-intro . +)
-				 (arglist-close . 0)
-				 (inline-open . 0)
-				 (brace-list-open . +)
-				 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont))
-				(c-special-indent-hook . c-gnu-impose-minimum)
-				(c-block-comment-prefix . ""))))
+                (c-basic-offset . 4)
+                (c-comment-only-line-offset 0 . 0)
+                (c-hanging-braces-alist
+                 (substatement-open before after)
+                 (arglist-cont-nonempty))
+                (c-offsets-alist
+                 (arglist-cont-nonempty . 0)
+                 (statement-block-intro . +)
+                 (knr-argdecl-intro . 5)
+                 (substatement-open . +)
+                 (substatement-label . 0)
+                 (label . 0)
+                 (statement-case-open . +)
+                 (statement-cont . 0)
+                 (arglist-intro . +)
+                 (arglist-close . 0)
+                 (inline-open . 0)
+                 (brace-list-open . +)
+                 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont))
+                (c-special-indent-hook . c-gnu-impose-minimum)
+                (c-block-comment-prefix . ""))))
 (setq c-default-style "user")
 
 ;; html2-mode
@@ -273,22 +273,22 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js2-mode-show-strict-warnings nil)
 (add-hook 'js2-mode-hook (lambda ()
-						   ;;(tern-mode t)
-						   ;;(flymake-find-file-hook) ; what if we're in scratch buffer
-						   (subword-mode t)
-						   (setq indent-tabs-mode nil)))
+                           ;;(tern-mode t)
+                           ;;(flymake-find-file-hook) ; what if we're in scratch buffer
+                           (subword-mode t)
+                           (setq indent-tabs-mode nil)))
 (eval-after-load 'tern
   '(progn
-	 (require 'tern-auto-complete)
-	 (tern-ac-setup)))
+     (require 'tern-auto-complete)
+     (tern-ac-setup)))
 
 ;; csharp mode
 (add-hook 'csharp-mode-hook
-		  (lambda ()
-			(c-set-style "c#")
-			(define-key csharp-mode-map (kbd "{") nil)
-			(define-key csharp-mode-map (kbd "}") nil)
-			(define-key csharp-mode-map (kbd ",") nil)))
+          (lambda ()
+            (c-set-style "c#")
+            (define-key csharp-mode-map (kbd "{") nil)
+            (define-key csharp-mode-map (kbd "}") nil)
+            (define-key csharp-mode-map (kbd ",") nil)))
 
 
 
@@ -322,15 +322,15 @@
   "Takes a buffer position n.  Returns the character position of
   the first character of that line."
   (save-excursion
-	(goto-char n)
-	(line-beginning-position)))
+    (goto-char n)
+    (line-beginning-position)))
 
 (defun line-end (n)
   "Takes a buffer position n.  Returns the character position of
   the last character of that line."
   (save-excursion
-	(goto-char n)
-	(line-end-position)))
+    (goto-char n)
+    (line-end-position)))
 
 
 
@@ -340,22 +340,22 @@
 (defun find-namespace (word)
   "Returns the namespace of a symbol"
   (with-current-buffer (find-tag-noselect word)
-	(save-excursion
-	  (beginning-of-buffer)
-	  (search-forward "namespace")
-	  (forward-char) ; go past space
-	  (buffer-substring (point) (line-end-position)))))
+    (save-excursion
+      (beginning-of-buffer)
+      (search-forward "namespace")
+      (forward-char) ; go past space
+      (buffer-substring (point) (line-end-position)))))
 
 
 (defun add-using (symbol)
   "Adds a using directive to the top of the file"
   (let ((using (concat "using " (find-namespace symbol) ";")))
-	(save-excursion
-	  (beginning-of-buffer)
-	  (if (not (search-forward using (point-max) t))
-		  (progn
-			(beginning-of-buffer)
-			(insert using "\n"))))))
+    (save-excursion
+      (beginning-of-buffer)
+      (if (not (search-forward using (point-max) t))
+          (progn
+            (beginning-of-buffer)
+            (insert using "\n"))))))
 
 (defun add-using-for-word-at-point ()
   "Adds using for word at point"
@@ -376,25 +376,25 @@
 (defun index-of (el list &optional index)
   "Returns the index of el within list"
   (let ((n (if index index 0)))
-	(if (equal el (car list))
-		n
-	  (let ((rest (cdr list)))
-		(if rest
-			(index-of el (cdr list) (+ n 1)))))))
+    (if (equal el (car list))
+        n
+      (let ((rest (cdr list)))
+        (if rest
+            (index-of el (cdr list) (+ n 1)))))))
 
 
 (defun requirejs-dependencies ()
   "Return list of requirejs dependencies brought in to current
-	require or define statement."
+    require or define statement."
   (interactive)
   (save-excursion
-	(requirejs-jump-to-require)
-	(search-forward "(")
-	(let* ((beginning-of-args (search-forward "("))
-		   (end-of-args (- (search-forward ")") 1))
-		   (args-string (buffer-substring beginning-of-args end-of-args))
-		   (args-with-shit (split-string args-string ",")))
-	  (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit)))))
+    (requirejs-jump-to-require)
+    (search-forward "(")
+    (let* ((beginning-of-args (search-forward "("))
+           (end-of-args (- (search-forward ")") 1))
+           (args-string (buffer-substring beginning-of-args end-of-args))
+           (args-with-shit (split-string args-string ",")))
+      (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) args-with-shit)))))
 
 
 (defun requirejs-paths ()
@@ -402,12 +402,12 @@
   statement."
   (interactive)
   (save-excursion
-	(requirejs-jump-to-require)
-	(let* ((beginning-of-paths (search-forward "["))
-		   (end-of-paths (- (search-forward "]") 1))
-		   (paths-string (buffer-substring beginning-of-paths end-of-paths))
-		   (paths-with-shit (split-string paths-string ",")))
-	  (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit)))))
+    (requirejs-jump-to-require)
+    (let* ((beginning-of-paths (search-forward "["))
+           (end-of-paths (- (search-forward "]") 1))
+           (paths-string (buffer-substring beginning-of-paths end-of-paths))
+           (paths-with-shit (split-string paths-string ",")))
+      (remove "" (mapcar (lambda (str) (replace-regexp-in-string "['\n[:space:]]" "" str)) paths-with-shit)))))
 
 
 (defun requirejs-add-dependency ()
@@ -415,61 +415,61 @@
   define statement."
   (interactive)
   (let ((word (word-at-point)))
-	(save-excursion
-	  (requirejs-jump-to-require)
-	  (let ((dependencies (requirejs-dependencies))
-			(paths (requirejs-paths)))
-		(if (not (index-of word dependencies))
-			(let ((index (index-of word (sort (cons word dependencies) 'string<))))
-			  (requirejs-jump-to-require)
-			  ;; add to array
-			  (search-forward "([")
-			  (dotimes (i index) (search-forward ","))
-			  (insert "\n'" word "',")
-			  (indent-for-tab-command)
-			  (if (string= "]" (string (char-after (point))))
-				  (insert "\n"))
-			  ;; add to function arguments
-			  (if (equal (char-after (point)) "]")
-				  (insert "\n"))
-			  (search-forward "(")
-			  (dotimes (i index) (re-search-forward "[,)]"))
-			  (if (not (string= (string (char-before (point))) "("))
-				  (progn
-					(backward-char)
-					(insert ", " word))
-				(insert word)
-				(if (not (string= (string (char-after (point))) ")"))
-					(insert ", "))))
-		  (message "dependency already exists"))))))
+    (save-excursion
+      (requirejs-jump-to-require)
+      (let ((dependencies (requirejs-dependencies))
+            (paths (requirejs-paths)))
+        (if (not (index-of word dependencies))
+            (let ((index (index-of word (sort (cons word dependencies) 'string<))))
+              (requirejs-jump-to-require)
+              ;; add to array
+              (search-forward "([")
+              (dotimes (i index) (search-forward ","))
+              (insert "\n'" word "',")
+              (indent-for-tab-command)
+              (if (string= "]" (string (char-after (point))))
+                  (insert "\n"))
+              ;; add to function arguments
+              (if (equal (char-after (point)) "]")
+                  (insert "\n"))
+              (search-forward "(")
+              (dotimes (i index) (re-search-forward "[,)]"))
+              (if (not (string= (string (char-before (point))) "("))
+                  (progn
+                    (backward-char)
+                    (insert ", " word))
+                (insert word)
+                (if (not (string= (string (char-after (point))) ")"))
+                    (insert ", "))))
+          (message "dependency already exists"))))))
 
 (defun requirejs-find-relative-path ()
   "Return relative path of dependency under point.  Assume we are
 inside a RequireJS require or define statement."
   (interactive)
   (let ((word (word-at-point)))
-	(save-excursion
-	  (requirejs-jump-to-require)
-	  (let ((index (index-of word (requirejs-dependencies))))
-		(if index
-			(nth index (requirejs-paths))
-		  (message "Unable to find file"))))))
+    (save-excursion
+      (requirejs-jump-to-require)
+      (let ((index (index-of word (requirejs-dependencies))))
+        (if index
+            (nth index (requirejs-paths))
+          (message "Unable to find file"))))))
 
 (defun parent-directory (dir)
   (unless (equal "c:/" dir)
-	(file-name-directory (directory-file-name dir))))
+    (file-name-directory (directory-file-name dir))))
 
 (defun requirejs-go-to-definition (&optional root)
   "Opens file corresponding to required thing under point"
   (interactive)
   (let* ((root (if root root (file-name-directory (buffer-file-name))))
-		 (rel-path (requirejs-find-relative-path))
-		 (full-path (concat root rel-path ".js")))
-	(if (file-exists-p full-path)
-		(find-file full-path)
-	  (let ((parent (parent-directory root)))
-		(if parent
-			(requirejs-go-to-definition parent))))))
+         (rel-path (requirejs-find-relative-path))
+         (full-path (concat root rel-path ".js")))
+    (if (file-exists-p full-path)
+        (find-file full-path)
+      (let ((parent (parent-directory root)))
+        (if parent
+            (requirejs-go-to-definition parent))))))
 
 
 ;(global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
@@ -486,9 +486,9 @@ Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of line."
   (interactive)
   (let ((oldpos (point)))
-	(beginning-of-line)
-	(if (= oldpos (point))
-		(back-to-indentation))))
+    (beginning-of-line)
+    (if (= oldpos (point))
+        (back-to-indentation))))
 
 
 (global-set-key [home] 'smart-beginning-of-line)
@@ -533,15 +533,15 @@ Will also prompt for a file to visit if current
 buffer is not visiting a file."
   (interactive "P")
   (if (or arg (not buffer-file-name))
-	  (find-file (concat "/sudo:root@localhost:"
-						 (ido-read-file-name "Find file(as root): ")))
-	(find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 
 (setq-default c-basic-offset 4
-			  js2-basic-offset 2
-			  tab-width 4
-			  indent-tabs-mode t)
+              js2-basic-offset 2
+              tab-width 4
+              indent-tabs-mode t)
 
 (defalias 'rs 'replace-string)
 (defalias 'qrr 'query-replace-regexp)
