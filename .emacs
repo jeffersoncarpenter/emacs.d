@@ -472,12 +472,12 @@ inside a RequireJS require or define statement."
             (requirejs-go-to-definition parent))))))
 
 
-;(global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
-;(global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
-;(global-set-key (kbd "C-, u") 'requirejs-add-dependency)
-;(global-set-key (kbd "C-x C-b d") 'requirejs-go-to-definition)
-;(global-set-key (kbd "C-x C-b t") (lambda () (interactive) (requirejs-go-to-definition)))
-;(global-set-key (kbd "C-x C-b u") 'requirejs-add-dependency)
+;;(global-set-key (kbd "C-, d") 'requirejs-go-to-definition)
+;;(global-set-key (kbd "C-, t") (lambda () (interactive) (requirejs-go-to-definition)))
+;;(global-set-key (kbd "C-, u") 'requirejs-add-dependency)
+;;(global-set-key (kbd "C-x C-b d") 'requirejs-go-to-definition)
+;;(global-set-key (kbd "C-x C-b t") (lambda () (interactive) (requirejs-go-to-definition)))
+;;(global-set-key (kbd "C-x C-b u") 'requirejs-add-dependency)
 
 
 (defun smart-beginning-of-line ()
