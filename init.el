@@ -62,8 +62,8 @@
 (setq whitespace-style '(face tabs spaces trailing space-before-tab indentation empty space-after-tab space-mark tab-mark))
 (defun prevent-whitespace-mode-for-magit ()
   (not (derived-mode-p 'magit-mode)))
-(add-function :before-while whitespace-enable-predicate 'prevent-whitespace-mode-for-magit)
 (global-whitespace-mode 1)
+(add-function :before-while whitespace-enable-predicate 'prevent-whitespace-mode-for-magit)
 
 ;; turn off fucking c-x c-b
 (global-unset-key (kbd "C-x C-b"))
