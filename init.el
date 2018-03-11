@@ -569,17 +569,17 @@ buffer is not visiting a file."
              '("^\\*shell\\*$" . (display-buffer-same-window)))
 
 ;; break company-clang
-(defun company-clang--candidates (prefix callback)
-  (and (company-clang--auto-save-p)
-       (buffer-modified-p)
-       (basic-save-buffer))
-  (when (null company-clang--prefix)
-    (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
-                                  'none)))
-  (apply 'company-clang--start-process
-         prefix
-         callback
-         (company-clang--build-complete-args (point))))
+;; (defun company-clang--candidates (prefix callback)
+;;   (and (company-clang--auto-save-p)
+;;        (buffer-modified-p)
+;;        (basic-save-buffer))
+;;   (when (null company-clang--prefix)
+;;     (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
+;;                                   'none)))
+;;   (apply 'company-clang--start-process
+;;          prefix
+;;          callback
+;;          (company-clang--build-complete-args (point))))
 
 (require-package 'sublimity)
 (require 'sublimity-scroll)
