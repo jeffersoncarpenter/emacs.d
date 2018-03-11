@@ -209,24 +209,24 @@
 
 ;; cc-mode
 ;; based on "gnu" style
+(define-key c-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
+(define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point))
 (add-hook 'c-mode-hook 'c-mode-stuff)
 (defun c-mode-stuff ()
   (company-mode)
-  (if (not (member 'company-rtags company-backends))
-      (push 'company-rtags company-backends))
-  (define-key c-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
-  (define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(define-key c++-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
+(define-key c++-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point)
+(define-key c++-mode-map (kbd "<C-tab>") 'clang-format-buffer)
+(define-key c++-mode-map (kbd "TAB") 'clang-format-region)
+(define-key c++-mode-map (kbd "C-j b") 'mark-c-scope-beg)
+(define-key c++-mode-map (kbd "C-j f") 'mark-c-scope-end)
+(define-key c++-mode-map (kbd "C-j a") 'mark-c-scope-beg)
+(define-key c++-mode-map (kbd "C-j e") 'mark-c-scope-end)
 (add-hook 'c++-mode-hook 'c++-mode-stuff)
 (defun c++-mode-stuff ()
   (company-mode)
-  (if (not (member 'company-rtags company-backends))
-      (push 'company-rtags company-backends))
-  (define-key c++-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
-  (define-key c++-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point)
-  (define-key c++-mode-map (kbd "<C-tab>") 'clang-format-buffer)
-  (define-key c++-mode-map (kbd "TAB") 'clang-format-region)
   (setq indent-tabs-mode nil)
   (subword-mode t)
   (add-to-list 'c-style-alist '("user"
@@ -252,6 +252,32 @@
 								(c-special-indent-hook . c-gnu-impose-minimum)
 								(c-block-comment-prefix . ""))))
 (setq c-default-style "user")
+
+(defun mark-c-scope-beg ()
+  "Marks the c-scope (region between {}) enclosing the point. 
+   Naive, as will be confused by { } within strings"
+  (interactive)
+  (let
+	  ((scope-depth 1))
+	(while (not (= scope-depth 0))
+	  (search-backward-regexp "}\\|{")
+	  (if (string= (char-to-string (char-after)) "}")
+		  (setq scope-depth (1+ scope-depth))
+		(setq scope-depth (1- scope-depth)))))
+  (point))
+
+(defun mark-c-scope-end ()
+  "Marks the c-scope (region between {}) enclosing the point. 
+   Naive, as will be confused by { } within strings"
+  (interactive)
+  (let
+	  ((scope-depth 1))
+	(while (not (= scope-depth 0))
+	  (search-forward-regexp "}\\|{")
+	  (if (string= (char-to-string (char-before)) "}")
+		  (setq scope-depth (1- scope-depth))
+		(setq scope-depth (1+ scope-depth)))))
+  (point))
 
 ;; html2-mode
 (load "~/.emacs.d/html2-mode.el")
@@ -498,6 +524,7 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
+(define-key global-map "\C-j" nil)
 
 
 (defun forward-delete-word (arg)
