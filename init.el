@@ -1,5 +1,4 @@
 ;; base environment changes
-(setq user-init-file (file-truename "~/.emacs.d/init.el"))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -21,7 +20,7 @@
  '(kill-do-not-save-duplicates t)
  '(package-selected-packages
    (quote
-    (tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+	(2048-game markdown-mode go-mode haskell-mode tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
  '(save-interprogram-paste-before-kill t)
  '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
@@ -66,7 +65,10 @@
 ;; show whitespace, todo: remove show trailing whitespace
 (setq-default show-trailing-whitespace t)
 (setq whitespace-style '(face tabs spaces trailing space-before-tab indentation empty space-after-tab space-mark tab-mark))
+(defun prevent-whitespace-mode-for-magit ()
+  (not (derived-mode-p 'magit-mode)))
 (global-whitespace-mode 1)
+(add-function :before-while whitespace-enable-predicate 'prevent-whitespace-mode-for-magit)
 
 ;; turn off fucking c-x c-b
 (global-unset-key (kbd "C-x C-b"))
