@@ -8,6 +8,11 @@
  '(ac-auto-show-menu t)
  '(company-auto-complete t)
  '(company-auto-complete-chars nil)
+ '(company-backends
+   (quote
+	(company-clang company-rtags company-css company-semantic company-nxml company-cmake company-capf company-files
+				   (company-dabbrev-code company-gtags company-etags company-keywords)
+				   company-oddmuse company-dabbrev)))
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(delete-active-region nil)
