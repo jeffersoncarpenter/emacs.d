@@ -212,10 +212,10 @@
 ;; cc-mode
 ;; based on "gnu" style
 (define-key c-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
-(define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point))
+(define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point)
 (add-hook 'c-mode-hook 'c-mode-stuff)
 (defun c-mode-stuff ()
-  (company-mode)
+  (company-mode))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (define-key c++-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
