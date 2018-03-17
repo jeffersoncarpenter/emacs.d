@@ -611,7 +611,7 @@ buffer is not visiting a file."
 ;;          (company-clang--build-complete-args (point))))
 
 (require-package 'sublimity)
-(require 'sublimity-scroll)
+;;(require 'sublimity-scroll)
 (require 'sublimity-map)
 
 (require-package 'tabbar)
