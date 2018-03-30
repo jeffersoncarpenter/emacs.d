@@ -12,6 +12,7 @@
 	(company-clang company-rtags company-css company-semantic company-nxml company-cmake company-capf company-files
 				   (company-dabbrev-code company-gtags company-etags company-keywords)
 				   company-oddmuse company-dabbrev)))
+ '(company-clang-arguments (quote ("-std=c++11")))
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(delete-active-region nil)
