@@ -7,6 +7,11 @@
  '(ac-auto-show-menu t)
  '(company-auto-complete t)
  '(company-auto-complete-chars nil)
+ '(company-backends
+   (quote
+	(company-clang company-rtags company-css company-semantic company-nxml company-cmake company-capf company-files
+				   (company-dabbrev-code company-gtags company-etags company-keywords)
+				   company-oddmuse company-dabbrev)))
  '(company-idle-delay 0)
  '(custom-enabled-themes (quote (wombat)))
  '(delete-active-region nil)
@@ -247,8 +252,6 @@ See also `whitespace-style', `whitespace-newline' and
 (add-hook 'c-mode-hook 'c-mode-stuff)
 (defun c-mode-stuff ()
   (company-mode)
-  (if (not (member 'company-rtags company-backends))
-      (push 'company-rtags company-backends))
   (define-key c-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
   (define-key c-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point))
 
@@ -256,12 +259,14 @@ See also `whitespace-style', `whitespace-newline' and
 (add-hook 'c++-mode-hook 'c++-mode-stuff)
 (defun c++-mode-stuff ()
   (company-mode)
-  (if (not (member 'company-rtags company-backends))
-      (push 'company-rtags company-backends))
   (define-key c++-mode-map (kbd "C-, d") 'rtags-find-symbol-at-point)
   (define-key c++-mode-map (kbd "C-, C-d") 'rtags-find-symbol-at-point)
   (define-key c++-mode-map (kbd "<C-tab>") 'clang-format-buffer)
   (define-key c++-mode-map (kbd "TAB") 'clang-format-region)
+  (define-key c++-mode-map (kbd "C-j b") 'mark-c-scope-beg)
+  (define-key c++-mode-map (kbd "C-j f") 'mark-c-scope-end)
+  (define-key c++-mode-map (kbd "C-j a") 'mark-c-scope-beg)
+  (define-key c++-mode-map (kbd "C-j e") 'mark-c-scope-end)
   (setq indent-tabs-mode nil)
   (subword-mode t)
   (add-to-list 'c-style-alist '("user"
@@ -287,6 +292,32 @@ See also `whitespace-style', `whitespace-newline' and
 								(c-special-indent-hook . c-gnu-impose-minimum)
 								(c-block-comment-prefix . ""))))
 (setq c-default-style "user")
+
+(defun mark-c-scope-beg ()
+  "Marks the c-scope (region between {}) enclosing the point. 
+   Naive, as will be confused by { } within strings"
+  (interactive)
+  (let
+	  ((scope-depth 1))
+	(while (not (= scope-depth 0))
+	  (search-backward-regexp "}\\|{")
+	  (if (string= (char-to-string (char-after)) "}")
+		  (setq scope-depth (1+ scope-depth))
+		(setq scope-depth (1- scope-depth)))))
+  (point))
+
+(defun mark-c-scope-end ()
+  "Marks the c-scope (region between {}) enclosing the point. 
+   Naive, as will be confused by { } within strings"
+  (interactive)
+  (let
+	  ((scope-depth 1))
+	(while (not (= scope-depth 0))
+	  (search-forward-regexp "}\\|{")
+	  (if (string= (char-to-string (char-before)) "}")
+		  (setq scope-depth (1- scope-depth))
+		(setq scope-depth (1+ scope-depth)))))
+  (point))
 
 ;; html2-mode
 (load "~/.emacs.d/html2-mode.el")
@@ -533,6 +564,7 @@ If point was already at that position, move point to beginning of line."
 
 (global-set-key [home] 'smart-beginning-of-line)
 (global-set-key "\C-a" 'smart-beginning-of-line)
+(define-key global-map "\C-j" nil)
 
 
 (defun forward-delete-word (arg)
@@ -579,7 +611,7 @@ buffer is not visiting a file."
 
 
 (setq-default c-basic-offset 4
-              js2-basic-offset 2
+              js2-basic-offset 4
               tab-width 4
               indent-tabs-mode t)
 
@@ -604,20 +636,20 @@ buffer is not visiting a file."
              '("^\\*shell\\*$" . (display-buffer-same-window)))
 
 ;; break company-clang
-(defun company-clang--candidates (prefix callback)
-  (and (company-clang--auto-save-p)
-       (buffer-modified-p)
-       (basic-save-buffer))
-  (when (null company-clang--prefix)
-    (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
-                                  'none)))
-  (apply 'company-clang--start-process
-         prefix
-         callback
-         (company-clang--build-complete-args (point))))
+;; (defun company-clang--candidates (prefix callback)
+;;   (and (company-clang--auto-save-p)
+;;        (buffer-modified-p)
+;;        (basic-save-buffer))
+;;   (when (null company-clang--prefix)
+;;     (company-clang-set-prefix (or (funcall company-clang-prefix-guesser)
+;;                                   'none)))
+;;   (apply 'company-clang--start-process
+;;          prefix
+;;          callback
+;;          (company-clang--build-complete-args (point))))
 
 (require-package 'sublimity)
-(require 'sublimity-scroll)
+;;(require 'sublimity-scroll)
 (require 'sublimity-map)
 
 (require-package 'tabbar)
