@@ -67,44 +67,9 @@
 (setq whitespace-style '(face tabs spaces trailing space-before-tab indentation empty space-after-tab space-mark tab-mark))
 (defun prevent-whitespace-mode-for-magit ()
   (not (derived-mode-p 'magit-mode)))
-(defun whitespace-turn-on-if-enabled-2 (x y z)
-  (when (funcall whitespace-enable-predicate)
-    (whitespace-turn-on)))
-(define-minor-mode global-whitespace-mode
-  "Toggle whitespace visualization globally (Global Whitespace mode).
-With a prefix argument ARG, enable Global Whitespace mode if ARG
-is positive, and disable it otherwise.
-
-If called from Lisp, also enables the mode if ARG is omitted or nil,
-and toggles it if ARG is `toggle'.
-
-See also `whitespace-style', `whitespace-newline' and
-`whitespace-display-mappings'."
-  :lighter    " WS"
-  :init-value nil
-  :global     t
-  :group      'whitespace
-  (cond
-   (noninteractive			; running a batch job
-    (setq global-whitespace-mode nil))
-   (global-whitespace-mode		; global-whitespace-mode on
-    (save-current-buffer
-      (add-hook 'find-file-hook 'whitespace-turn-on-if-enabled)
-      (add-hook 'after-change-major-mode-hook 'whitespace-turn-on-if-enabled)
-	  (advice-add 'switch-to-buffer :after 'whitespace-turn-on-if-enabled-2)
-      (dolist (buffer (buffer-list))	; adjust all local mode
-	(set-buffer buffer)
-	(unless whitespace-mode
-	  (whitespace-turn-on-if-enabled)))))
-   (t					; global-whitespace-mode off
-    (save-current-buffer
-      (remove-hook 'find-file-hook 'whitespace-turn-on-if-enabled)
-      (remove-hook 'after-change-major-mode-hook 'whitespace-turn-on-if-enabled)
-	  (advice-remove 'switch-to-buffer 'whitespace-turn-on-if-enabled-2)
-      (dolist (buffer (buffer-list))	; adjust all local mode
-	(set-buffer buffer)
-	(unless whitespace-mode
-	  (whitespace-turn-off)))))))
+(defun whitespace-turn-on-if-enabled-2 (&rest args)
+  (whitespace-turn-on-if-enabled))
+(advice-add 'switch-to-buffer :after 'whitespace-turn-on-if-enabled-2)
 (global-whitespace-mode 1)
 (add-function :before-while whitespace-enable-predicate 'prevent-whitespace-mode-for-magit)
 
