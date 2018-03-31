@@ -22,6 +22,9 @@
  '(package-selected-packages
    (quote
 	(2048-game markdown-mode go-mode haskell-mode tern-auto-complete tern tabbar sublimity flymake magit js2-mode idris-mode graphviz-dot-mode company clang-format)))
+ '(safe-local-variable-values
+   (quote
+	((c-noise-macro-names "UNINIT" "CALLBACK" "ALIGN_STACK"))))
  '(save-interprogram-paste-before-kill t)
  '(sublimity-disable-smooth-scroll t))
 (custom-set-faces
