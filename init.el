@@ -236,7 +236,7 @@
   (define-key c++-mode-map (kbd "C-j f") 'mark-c-scope-end)
   (define-key c++-mode-map (kbd "C-j a") 'mark-c-scope-beg)
   (define-key c++-mode-map (kbd "C-j e") 'mark-c-scope-end)
-  (setq indent-tabs-mode nil)
+  ;;(setq indent-tabs-mode nil)
   (subword-mode t)
   (add-to-list 'c-style-alist '("user"
 								(c-basic-offset . 4)
