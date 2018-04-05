@@ -238,43 +238,88 @@
   (define-key c++-mode-map (kbd "C-j e") 'mark-c-scope-end)
   ;;(setq indent-tabs-mode nil)
   (subword-mode t)
-  (add-to-list 'c-style-alist '("user"
-								(c-basic-offset . 4)
-								(c-comment-only-line-offset 0 . 0)
-								(c-hanging-braces-alist
-								 (substatement-open before after)
-								 (arglist-cont-nonempty))
-								(c-offsets-alist
-								 (arglist-cont-nonempty . 0)
-								 (statement-block-intro . +)
-								 (knr-argdecl-intro . 5)
-								 (substatement-open . +)
-								 (substatement-label . 0)
-								 (label . 0)
-								 (statement-case-open . +)
-								 (statement-cont . 0)
-								 (arglist-intro . +)
-								 (arglist-close . 0)
-								 (inline-open . 0)
-								 (brace-list-open . +)
-								 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont))
-								(c-special-indent-hook . c-gnu-impose-minimum)
-								(c-block-comment-prefix . ""))))
+  (c-add-style "user" '((c-basic-offset . 4)
+						(c-comment-only-line-offset 0 . 0)
+						(c-hanging-braces-alist
+						 (substatement-open before after)
+						 (arglist-cont-nonempty))
+						(c-offsets-alist
+						 (arglist-cont-nonempty . c-lineup-arglist)
+						 (statement-block-intro . +)
+						 (knr-argdecl-intro . 5)
+						 (substatement-open . +)
+						 (substatement-label . 0)
+						 (label . 0)
+						 (statement-case-intro . +)
+						 (statement-case-open . +)
+						 (statement-cont . +)
+						 (arglist-intro . +)
+						 (arglist-close . 0)
+						 (inline-open . 0)
+						 (brace-list-intro . +)
+						 (brace-list-entry . 0)
+						 (brace-list-open . +)
+						 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont)
+						 (inlambda . 0)
+						 (defun-block-intro . +)
+						 (block-close . 0))
+						(c-special-indent-hook . c-gnu-impose-minimum)
+						(c-block-comment-prefix . ""))))
 (setq c-default-style "user")
 
+(defun c-lineup-arglist (_langelem)
+  "Line up the current argument line under the first argument.
+
+As a special case, if the indented line is inside a brace block
+construct, the indentation is `c-basic-offset' only.  This is intended
+as a \"DWIM\" measure in cases like macros that contains statement
+blocks, e.g.:
+
+A_VERY_LONG_MACRO_NAME ({
+        some (code, with + long, lines * in[it]);
+    });
+<--> c-basic-offset
+
+This is motivated partly because it's more in line with how code
+blocks are handled, and partly since it approximates the behavior of
+earlier CC Mode versions, which due to inaccurate analysis tended to
+indent such cases this way.
+
+Works with: arglist-cont-nonempty, arglist-close."
+  (save-excursion
+    (let ((indent-pos (point)))
+
+      (if (c-block-in-arglist-dwim (c-langelem-2nd-pos c-syntactic-element))
+		  0		; DWIM case.
+
+		;; Normal case.  Indent to the token after the arglist open paren.
+		(goto-char (c-langelem-2nd-pos c-syntactic-element))
+		(if (and c-special-brace-lists
+				 (c-looking-at-special-brace-list))
+			;; Skip a special brace list opener like "({".
+			(progn (c-forward-token-2)
+				   (forward-char))
+		  (forward-char))
+		(let ((arglist-content-start (point)))
+		  (c-forward-syntactic-ws)
+		  (when (< (point) indent-pos)
+			(goto-char arglist-content-start)
+			(skip-chars-forward " \t"))
+		  (vector (current-column)))))))
+
 ;; https://stackoverflow.com/questions/23553881/emacs-indenting-of-c11-lambda-functions-cc-mode
-(defadvice c-lineup-arglist (around my activate)
-  "Improve indentation of continued C++11 lambda function opened as argument."
-  (setq ad-return-value
-		(if (and (equal major-mode 'c++-mode)
-				 (ignore-errors
-				   (save-excursion
-					 (goto-char (c-langelem-pos langelem))
-					 ;; Detect "[...](" or "[...]{". preceded by "," or "(",
-					 ;;   and with unclosed brace.
-					 (looking-at ".*[(,][ \t]*\\[[^]]*\\][ \t]*[({][^}]*$"))))
-			0                           ; no additional indent
-		            ad-do-it)))                   ; default behavior"]}]")")""}"")"))))))
+;; (defadvice c-lineup-arglist (around my activate)
+;;   "Improve indentation of continued C++11 lambda function opened as argument."
+;;   (setq ad-return-value
+;; 		(if (and (equal major-mode 'c++-mode)
+;; 				 (ignore-errors
+;; 				   (save-excursion
+;; 					 (goto-char (c-langelem-pos langelem))
+;; 					 ;; Detect "[...](" or "[...]{". preceded by "," or "(",
+;; 					 ;;   and with unclosed brace.
+;; 					 (looking-at ".*[(,][ \t]*\\[[^]]*\\][ \t]*[({][^}]*$"))))
+;; 			0                           ; no additional indent
+;; 		            ad-do-it)))                   ; default behavior
 
 (defun mark-c-scope-beg ()
   "Marks the c-scope (region between {}) enclosing the point. 
