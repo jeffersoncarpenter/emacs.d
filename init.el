@@ -257,7 +257,7 @@
 						 (arglist-close . 0)
 						 (inline-open . 0)
 						 (brace-list-intro . +)
-						 (brace-list-entry . +)
+						 (brace-list-entry . 0)
 						 (brace-list-open . +)
 						 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont)
 						 (inlambda . 0)
