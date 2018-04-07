@@ -244,7 +244,7 @@
 						 (substatement-open before after)
 						 (arglist-cont-nonempty))
 						(c-offsets-alist
-						 (arglist-cont-nonempty . c-lineup-arglist)
+						 (arglist-cont-nonempty . c-lineup-arglist-0)
 						 (statement-block-intro . +)
 						 (knr-argdecl-intro . 5)
 						 (substatement-open . +)
@@ -257,7 +257,7 @@
 						 (arglist-close . 0)
 						 (inline-open . 0)
 						 (brace-list-intro . +)
-						 (brace-list-entry . 0)
+						 (brace-list-entry . +)
 						 (brace-list-open . +)
 						 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont)
 						 (inlambda . 0)
@@ -267,7 +267,7 @@
 						(c-block-comment-prefix . ""))))
 (setq c-default-style "user")
 
-(defun c-lineup-arglist (_langelem)
+(defun c-lineup-arglist-0 (_langelem)
   "Line up the current argument line under the first argument.
 
 As a special case, if the indented line is inside a brace block
