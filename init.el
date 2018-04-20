@@ -609,10 +609,6 @@ With argument ARG, do this that many times."
 (global-set-key "\M-d" 'forward-delete-word)
 
 
-;; note to self: what the fuck is this for?  C mode?
-(setq tab-width 4)
-
-
 (defun list-buffers-same-window (&optional arg)
   "Display a list of existing buffers.
 The list is displayed in a buffer named \"*Buffer List*\".
@@ -640,7 +636,6 @@ buffer is not visiting a file."
 
 (setq-default c-basic-offset 4
               js2-basic-offset 4
-              tab-width 4
               indent-tabs-mode t)
 
 (defalias 'rs 'replace-string)
