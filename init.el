@@ -244,6 +244,7 @@
 						 (substatement-open before after)
 						 (arglist-cont-nonempty))
 						(c-offsets-alist
+						 (innamespace . 0)
 						 (arglist-cont-nonempty . c-lineup-arglist-0)
 						 (statement-block-intro . +)
 						 (knr-argdecl-intro . 5)
@@ -262,7 +263,8 @@
 						 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont)
 						 (inlambda . 0)
 						 (defun-block-intro . +)
-						 (block-close . 0))
+						 (block-close . 0)
+						 (inexpr-statement . 0))
 						(c-special-indent-hook . c-gnu-impose-minimum)
 						(c-block-comment-prefix . ""))))
 (setq c-default-style "user")
