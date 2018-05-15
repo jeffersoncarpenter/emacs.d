@@ -16,35 +16,43 @@ scopes based on indentation.")
 
 (defun show-enclosing-scope--delete-window ()
   "Kill the minimap window."
-  (when (window-live-p show-enclosing-scope--window)
-    (let* ((partner (window-parameter
-                     show-enclosing-scope--window 'show-enclosing-scope-partner))
-           (margin1 (window-margins partner))
-           (margin2 (window-margins show-enclosing-scope--window))
-           (fringe1 (window-fringes partner))
-           (fringe2 (window-fringes show-enclosing-scope--window))
-	   (point-pos (point)))
-      (ignore-errors (when show-enclosing-scope--scroll (scroll-down (window-total-height show-enclosing-scope--window))))
-      (redisplay)
-      (when show-enclosing-scope--scroll (goto-char point-pos))
-      (delete-window show-enclosing-scope--window)
-      (set-window-margins partner (car margin1) (cdr margin2))
-      (set-window-fringes partner (car fringe1) (cadr fringe2))
-      (setq show-enclosing-scope--window nil))))
+  (let ((scroll-down-amount 0))
+    (when (window-live-p show-enclosing-scope--window)
+      (let* ((partner (window-parameter
+                       show-enclosing-scope--window 'show-enclosing-scope-partner))
+             (margin1 (window-margins partner))
+             (margin2 (window-margins show-enclosing-scope--window))
+             (fringe1 (window-fringes partner))
+             (fringe2 (window-fringes show-enclosing-scope--window))
+	     (point-pos (point)))
+	(dotimes (i (window-total-height show-enclosing-scope--window))
+	  (condition-case nil
+	      (when show-enclosing-scope--scroll (scroll-down 1))
+	    (error
+	     (incf scroll-down-amount))))
+	(redisplay)
+	(when show-enclosing-scope--scroll (goto-char point-pos))
+	(delete-window show-enclosing-scope--window)
+	(set-window-margins partner (car margin1) (cdr margin2))
+	(set-window-fringes partner (car fringe1) (cadr fringe2))
+	(setq show-enclosing-scope--window nil)))
+    scroll-down-amount))
 
 (defun show-enclosing-scope--get-buffer ()
   (get-buffer-create "show-enclosing-scope"))
 
 (defun show-enclosing-scope--split-window (size)
   "Make a minimap window."
-  ;; make sure that the old one is killedv
-  (show-enclosing-scope--delete-window)
-  ;; split new one off
-  (let* ((basewin (selected-window))
+  ;; make sure that the old one is killed
+  (let* ((scroll-down-amount (show-enclosing-scope--delete-window))
+	 (basewin (selected-window))
          (margin (window-margins basewin))
          (fringe (window-fringes basewin))
 	 (point-pos (point)))
-    (ignore-errors (when show-enclosing-scope--scroll (scroll-up window-size)))
+    ;; split new one off
+    (condition-case nil
+	(when show-enclosing-scope--scroll (scroll-up (- window-size scroll-down-amount)))
+      (error nil))
     (redisplay)
     (set-window-margins basewin (car margin) 0)
     (set-window-fringes basewin (car fringe) 0)
