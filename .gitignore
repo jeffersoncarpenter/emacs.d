@@ -6,3 +6,6 @@ elpa/
 ac-comphist.dat
 session*
 tramp
+
+*~
+bookmarks
