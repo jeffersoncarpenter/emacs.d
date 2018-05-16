@@ -98,7 +98,7 @@ scopes based on indentation.")
        (reverse scopes))
       (insert "-----"))))
 
-;; (add-hook 'pre-command-hook 'show-enclosing-scope--delete-window nil :local)
+(add-hook 'pre-command-hook 'show-enclosing-scope--delete-window nil :local)
 (add-hook 'post-command-hook 'show-enclosing-scope--refresh nil :local)
 
 ;; (remove-hook 'pre-command-hook 'show-enclosing-scope--delete-window)
