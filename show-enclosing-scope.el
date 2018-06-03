@@ -83,9 +83,13 @@ scopes based on indentation.")
     (if (< 1 window-size)
 	(show-enclosing-scope--split-window window-size)
       (show-enclosing-scope--delete-window)
-      (scroll-down (min
-		    show-enclosing-scope--scroll-down-amount
-		    (- (line-number-at-pos (window-start)) 1))))
+      (condition-case
+	  nil
+	  (scroll-down
+	   (min
+	    show-enclosing-scope--scroll-down-amount
+	    (- (line-number-at-pos (window-start)) 1)))
+	(error nil)))
     (setq show-enclosing-scope--scroll-down-amount 0)
     (with-current-buffer (show-enclosing-scope--get-buffer)
       (erase-buffer)
@@ -96,8 +100,5 @@ scopes based on indentation.")
        (reverse scopes))
       (insert "-----"))))
 
-(add-hook 'pre-command-hook 'show-enclosing-scope--delete-window nil :local)
 (add-hook 'post-command-hook 'show-enclosing-scope--refresh nil :local)
-
-(remove-hook 'pre-command-hook 'show-enclosing-scope--delete-window :local)
-(remove-hook 'post-command-hook 'show-enclosing-scope--refresh :local)
+;;(remove-hook 'post-command-hook 'show-enclosing-scope--refresh :local)
