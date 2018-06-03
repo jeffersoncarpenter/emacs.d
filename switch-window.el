@@ -119,12 +119,21 @@
   "Return the label to use for a given window number"
   (nth (- num 1) (switch-window-enumerate)))
 
+(defun other-window-list (&optional from-current-window)
+  "list windows for current frame, starting at top left unless
+from-current-window is not nil, excluding windows whose
+no-other-window parameter is non-nil"
+  (seq-filter
+   (lambda (win)
+     (not (window-parameter win 'no-other-window)))
+   (if (or from-current-window switch-window-relative)
+       (window-list nil nil)
+     (window-list nil nil (frame-first-window)))))
+
 (defun switch-window-list (&optional from-current-window)
   "list windows for current frame, starting at top left unless
 from-current-window is not nil"
-  (if (or from-current-window switch-window-relative)
-      (window-list nil nil)
-    (window-list nil nil (frame-first-window))))
+  (other-window-list from-current-window))
 
 (defun switch-window-display-number (win num)
   "prepare a temp buffer to diplay in the window while choosing"
@@ -184,7 +193,7 @@ from-current-window is not nil"
   "Display an overlay in each window showing a unique key, then
 ask user which window to delete"
   (interactive)
-  (if (> (length (window-list)) 1)
+  (if (> (length (other-window-list)) 1)
       (progn
         (let ((index (prompt-for-selected-window "Delete window: ")))
           (apply-to-window-index 'delete-window index "")))))
@@ -194,7 +203,7 @@ ask user which window to delete"
   "Display an overlay in each window showing a unique key, then
 ask user for the window where move to"
   (interactive)
-  (if (<= (length (window-list)) switch-window-threshold)
+  (if (<= (length (other-window-list)) switch-window-threshold)
       (call-interactively 'other-window)
     (progn
       (let ((index (prompt-for-selected-window "Move to window: "))
